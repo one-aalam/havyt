@@ -1,0 +1,9 @@
+{
+  "name": "fastifyrius",
+  "version": "1.0.0",
+  "description": "Learn Fastify by building an app",
+  "main": "index.js",
+  "repository": "https://github.com/one-aalam/fastifyrius",
+  "author": "Aftab Alam",
+  "license": "MIT"
+}
