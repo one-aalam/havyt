@@ -1,8 +1,8 @@
-import { buildSever } from './app'
+import { buildServer } from './app'
 
 const APP_PORT = process.env.APP_PORT || 3000
 
-const server = buildSever()
+const server = buildServer()
 
 server.listen(APP_PORT, '0.0.0.0', (err) => {
     if(err) {

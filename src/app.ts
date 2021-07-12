@@ -2,7 +2,7 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import { USERS, RECIPES, RECIPE_CATEGORIES } from './fixtures'
 
-export const buildSever = (): FastifyInstance => {
+export const buildServer = (): FastifyInstance => {
     // Instantiate the Fastify server
     const fastify = Fastify()
 
