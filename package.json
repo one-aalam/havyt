@@ -1,7 +1,7 @@
 {
-  "name": "fastifyrius",
+  "name": "havyt",
   "version": "1.0.0",
-  "description": "Learn Fastify by building an app",
+  "description": "Learn Fastify by building a recipe app",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev -r dotenv/config --log-error --files ./src/server.ts",
@@ -12,7 +12,7 @@
     "format": "prettier --write ./src",
     "lint:fix": "eslint src/** --fix"
   },
-  "repository": "https://github.com/one-aalam/fastifyrius",
+  "repository": "https://github.com/one-aalam/havyt",
   "author": "Aftab Alam",
   "license": "MIT",
   "devDependencies": {
