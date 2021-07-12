@@ -6,13 +6,12 @@
   "scripts": {
     "dev": "ts-node-dev -r dotenv/config --log-error --files ./src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "NODE_ENV=production node -r dotenv/config dist/server.js",
+    "start": "NODE_ENV=production node dist/server.js",
     "type:check": "tsc --project tsconfig.json --pretty --noEmit",
     "lint": "prettier --c src/** && eslint src/** --quiet",
     "format": "prettier --write ./src",
     "lint:fix": "eslint src/** --fix"
   },
-  "type": "module",
   "repository": "https://github.com/one-aalam/fastifyrius",
   "author": "Aftab Alam",
   "license": "MIT",
