@@ -6,14 +6,31 @@ type RecipeParams = {
 }
 
 type RecipeQuerystring = {
-    tag: string
+    offset?: number
+    limit?: number
+    tag?: string
+    cuisineId?: number
+    courseId?: number
 }
 
 export default async function recipes(fastify: FastifyInstance) {
-    // get all recipes having the provided `tag` or all the recipes
+    // get all recipes having the provided `tag`, `cuisineId`, `categoryId`, or range, or all the recipes
     fastify.get<{
         Querystring: RecipeQuerystring
-    }>('/recipes', async (req) => req.query?.tag ? RECIPES.filter(recipe => recipe.tags?.map(tag => tag.toLowerCase()).includes(req.query?.tag)) : RECIPES)
+    }>('/recipes', async (req) => {
+        const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
+        return RECIPES
+            .filter(recipe =>
+                !tag || recipe.tags?.map(tag => tag.toLowerCase()).includes(tag)
+            )
+            .filter(recipe =>
+                !cuisineId || recipe.cuisineId == cuisineId
+            )
+            .filter(recipe =>
+                !courseId || recipe.courseId == courseId
+            )
+            .slice(offset, offset + limit)
+    })
 
     // get the recipe by provided id
     fastify.get<{
