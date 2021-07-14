@@ -2,6 +2,28 @@ import { FastifyInstance } from 'fastify'
 import { RECIPE_CATEGORIES } from '../fixtures'
 import { RecipeCatgeory } from '../types'
 
+const categoryBodySchema = {
+    type: 'object',
+    properties: {
+        type: { type: 'string'},
+        name: { type: 'string'},
+        desc: { type: 'string'}
+    },
+}
+
+const categoryCreateBodySchema = {
+    ...categoryBodySchema,
+    required: [ 'type' ]
+}
+
+const categoryParamsSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'number'}
+    },
+    required: [ 'id' ]
+}
+
 type CategoryParams = {
     id: string
 }
@@ -17,7 +39,9 @@ export default async function categories(fastify: FastifyInstance) {
     // get the category by provided id
     fastify.get<{
         Params: CategoryParams
-    }>('/categories/:id', async (req, reply) => {
+    }>('/categories/:id', { schema: {
+       params: categoryParamsSchema
+    }},async (req, reply) => {
         const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === parseInt(req.params.id))
         if(!recipeCategory) {
             reply.code(404).send({
@@ -28,7 +52,10 @@ export default async function categories(fastify: FastifyInstance) {
         return recipeCategory
     })
 
-    fastify.post<{ Body: CategoryCreateBody }>('/categories', async (req, reply) => {
+    fastify.post<{ Body: CategoryCreateBody }>('/categories',  { schema: {
+        params: categoryParamsSchema,
+        body: categoryCreateBodySchema
+     }}, async (req, reply) => {
         const { type, name, desc } = req.body
 
         // enforce constraints like unique-ness
@@ -55,7 +82,10 @@ export default async function categories(fastify: FastifyInstance) {
     fastify.put<{
         Params: CategoryParams,
         Body: CategoryUpdateBody
-    }>('/categories/:id', async (req, reply) => {
+    }>('/categories/:id',  { schema: {
+        params: categoryParamsSchema,
+        body: categoryBodySchema
+     }}, async (req, reply) => {
 
         // err, and exit early!
         let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === parseInt(req.params.id))
@@ -101,7 +131,9 @@ export default async function categories(fastify: FastifyInstance) {
 
     fastify.delete<{
         Params: CategoryParams,
-    }>('/categories/:id', async (req, reply) => {
+    }>('/categories/:id',  { schema: {
+        params: categoryParamsSchema
+     }}, async (req, reply) => {
 
         // get where is it
         const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === parseInt(req.params.id))

@@ -2,6 +2,49 @@ import { FastifyInstance } from 'fastify'
 import { Recipe } from '../types'
 import { RECIPES } from '../fixtures'
 
+
+const recipeBodySchema = {
+    type: 'object',
+    properties: {
+        name: { type: 'string' },
+        desc: { type: 'string', default: '' },
+        imageUrl: { type: 'string', default: '' },
+        courseId: { type: 'number',  },
+        cuisineId: { type: 'number' },
+        serves: { type: 'number' },
+        prepTime: { type: 'number', default: 0 },
+        cookingTime: { type: 'number' },
+        ingredients: { type: 'array', items: { type: 'string' }},
+        directions: { type: 'array', items: { type: 'string' }},
+        source: { type: 'string', default: '' },
+        tags: { type: 'string', default: '' },
+    },
+}
+
+const recipeBodyCreateSchema = {
+    ...recipeBodySchema,
+    required: [ 'name', 'courseId', 'cuisineId', 'serves', 'cookingTime', 'ingredients', 'directions' ]
+}
+
+const recipeParamsSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'number'}
+    },
+    required: [ 'id' ]
+}
+
+const recipeQuerystringSchema = {
+    type: 'object',
+    properties: {
+        offset: { type: 'number'},
+        limit: { type: 'number'},
+        tag: { type: 'string'},
+        cuisineId: { type: 'number'},
+        courseId: { type: 'number'},
+    },
+}
+
 type RecipeParams = {
     id: string
 }
@@ -24,7 +67,9 @@ export default async function recipes(fastify: FastifyInstance) {
     // get all recipes having the provided `tag`, `cuisineId`, `categoryId`, or range, or all the recipes
     fastify.get<{
         Querystring: RecipeQuerystring
-    }>('/recipes', async (req) => {
+    }>('/recipes', { schema: {
+        querystring: recipeQuerystringSchema
+    }}, async (req) => {
         const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
         return RECIPES
             .filter(recipe =>
@@ -42,7 +87,9 @@ export default async function recipes(fastify: FastifyInstance) {
     // get the recipe by provided id
     fastify.get<{
         Params: RecipeParams
-    }>('/recipes/:id', async (req, reply) => {
+    }>('/recipes/:id', { schema: {
+        params: recipeParamsSchema
+    }}, async (req, reply) => {
         const recipe = RECIPES.find(recipe => recipe.id === parseInt(req.params.id))
         if(!recipe) {
             reply.code(404).send({
@@ -53,19 +100,24 @@ export default async function recipes(fastify: FastifyInstance) {
         return recipe
     })
 
-    fastify.post<{ Body: RecipeCreateBody }>('/recipes', async (req, reply) => {
+    fastify.post<{ Body: RecipeCreateBody }>('/recipes', { schema: {
+        body: recipeBodyCreateSchema
+    }}, async (req, reply) => {
         const newRecipe: Recipe  = {
             ...req.body,
             id: RECIPES[RECIPES.length - 1].id + 1,
         }
-        // RECIPES.push(newRecipe)
+        RECIPES.push(newRecipe)
         reply.code(201).send(newRecipe)
     })
 
     fastify.put<{
         Params: RecipeParams,
         Body: RecipeUpdateBody
-    }>('/recipes/:id', async (req, reply) => {
+    }>('/recipes/:id', { schema: {
+        params: recipeParamsSchema,
+        body: recipeBodySchema
+    }}, async (req, reply) => {
 
         const recipe = RECIPES.find(recipe => recipe.id === parseInt(req.params.id))
         if(!recipe) {
@@ -93,7 +145,9 @@ export default async function recipes(fastify: FastifyInstance) {
 
     fastify.delete<{
         Params: RecipeParams,
-    }>('/recipes/:id', async (req, reply) => {
+    }>('/recipes/:id', { schema: {
+        params: recipeParamsSchema
+    }}, async (req, reply) => {
 
         // get where is it
         const recipeIndex = RECIPES.findIndex(recipe => recipe.id === parseInt(req.params.id))

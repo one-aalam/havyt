@@ -1,6 +1,15 @@
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import { USERS } from '../fixtures'
 
+const authBodySchema = {
+    type: 'object',
+    properties: {
+        email: { type: 'string', format: 'email'},
+        password: { type: 'string'},
+    },
+    required: ['email', 'password']
+}
+
 type AuthLoginBody = {
     email: string
     password: string
@@ -8,7 +17,11 @@ type AuthLoginBody = {
 
 export default async function auth(fastify: FastifyInstance) {
     // log-in a user
-    fastify.post<{ Body: AuthLoginBody }>('/auth/login', async (req: FastifyRequest, reply) => {
+    fastify.post<{ Body: AuthLoginBody }>('/auth/login', {
+        schema: {
+            body: authBodySchema
+        }
+    },async (req: FastifyRequest, reply) => {
         // @ts-ignore
         const { email, password } = req.body
         const user = USERS.find(user => user.email == email)
