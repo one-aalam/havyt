@@ -15,7 +15,10 @@ export default async function categories(fastify: FastifyInstance) {
     }>('/categories/:id', async (req, reply) => {
         const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === parseInt(req.params.id))
         if(!recipeCategory) {
-            reply.code(404).type('text/html').send('Not Found')
+            reply.code(404).send({
+                name: 'NotFoundError',
+                message: 'Not Found'
+            })
         }
         return recipeCategory
     })

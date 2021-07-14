@@ -15,7 +15,10 @@ export default async function users(fastify: FastifyInstance) {
     }>('/users/:id', async (req, reply) => {
         const user = USERS.find(user => user.id === parseInt(req.params.id))
         if(!user) {
-            reply.code(404).type('text/html').send('Not Found')
+            reply.code(404).send({
+                name: 'NotFoundError',
+                message: 'Not Found'
+            })
         }
         return user
     })

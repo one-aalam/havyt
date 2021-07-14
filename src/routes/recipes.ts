@@ -38,7 +38,10 @@ export default async function recipes(fastify: FastifyInstance) {
     }>('/recipes/:id', async (req, reply) => {
         const recipe = RECIPES.find(recipe => recipe.id === parseInt(req.params.id))
         if(!recipe) {
-            reply.code(404).type('text/html').send('Not Found')
+            reply.code(404).send({
+                name: 'NotFoundError',
+                message: 'Not Found'
+            })
         }
         return recipe
     })
