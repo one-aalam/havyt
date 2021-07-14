@@ -1,21 +1,14 @@
 import { FastifyInstance } from 'fastify'
 import { RECIPE_CATEGORIES } from '../fixtures'
+import { RecipeCatgeory } from '../types'
 
 type CategoryParams = {
     id: string
 }
 
-type CategoryCreateBody = {
-    type: string
-    name: string
-    desc?: string
-}
+type CategoryCreateBody = Omit<RecipeCatgeory, 'id'>
 
-type CategoryUpdateBody = {
-    type?: string
-    name?: string
-    desc?: string
-}
+type CategoryUpdateBody = Partial<RecipeCatgeory>
 
 export default async function categories(fastify: FastifyInstance) {
     // get all the categories
