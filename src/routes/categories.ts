@@ -38,6 +38,15 @@ export default async function categories(fastify: FastifyInstance) {
     fastify.post<{ Body: CategoryCreateBody }>('/categories', async (req, reply) => {
         const { type, name, desc } = req.body
 
+        // enforce constraints like unique-ness
+        const hasCategoryWithProvidedType = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.type === type)
+        if(hasCategoryWithProvidedType) {
+            reply.code(409).send({
+                name: 'Conflict',
+                message: 'Conflict'
+            })
+        }
+
         // deletions leave the DB's in a state where id's cannot be just safely incremented based on the count
         // here we're adding one to the last id in the available records, which is a more safer way to do this
         const newCategory = {
@@ -61,6 +70,15 @@ export default async function categories(fastify: FastifyInstance) {
             reply.code(404).send({
                 name: 'NotFoundError',
                 message: 'Not Found'
+            })
+        }
+
+        // enforce constraints like unique-ness
+        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== parseInt(req.params.id) && recipeCategory.type === type).length >= 0 ? true : false
+        if(hasOtherCategoryWithProvidedType) {
+            reply.code(409).send({
+                name: 'Conflict',
+                message: 'Conflict'
             })
         }
 
