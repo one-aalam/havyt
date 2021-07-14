@@ -9,6 +9,7 @@ export const buildServer = (): FastifyInstance => {
     fastify.register(import('./routes/users'))
     fastify.register(import('./routes/recipes'))
     fastify.register(import('./routes/categories'))
+    fastify.register(import('./routes/auth'))
 
     fastify.get('*', async (req) => `You requested for ${req.url} using method ${req.method}, which does not have an associated response`)
 
