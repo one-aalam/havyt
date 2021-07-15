@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { Recipe } from '../types'
 import { recipeSchema, errorSchema } from '../schemas'
 import { RECIPES } from '../fixtures'
 
@@ -106,7 +105,7 @@ export default async function recipes(fastify: FastifyInstance) {
             '4xx': errorSchema
         }
     }}, async (req, reply) => {
-        const newRecipe: Recipe  = {
+        const newRecipe  = {
             ...req.body,
             id: RECIPES[RECIPES.length - 1].id + 1,
         }
