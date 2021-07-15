@@ -46,7 +46,14 @@ type CategoryUpdateBody = Partial<CategoryCreateBody>
 
 export default async function categories(fastify: FastifyInstance) {
     // get all the categories
-    fastify.get('/categories', async () => RECIPE_CATEGORIES)
+    fastify.get('/categories', { schema: {
+        response: {
+            200: {
+                type: 'array',
+                items: categorySchema
+            }
+        }
+    }}, async () => RECIPE_CATEGORIES)
 
     // get the category by provided id
     fastify.get<{

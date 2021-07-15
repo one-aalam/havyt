@@ -62,6 +62,12 @@ export default async function recipes(fastify: FastifyInstance) {
         Querystring: RecipeQuerystring
     }>('/recipes', { schema: {
         querystring: recipeQuerystringSchema,
+        response: {
+            200: {
+                type: 'array',
+                items: recipeSchema
+            }
+        }
     }}, async (req) => {
         const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
         return RECIPES
