@@ -1,40 +1,17 @@
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { errorSchema } from '../schemas/error'
+import { authSchema, userSchema, errorSchema } from '../schemas'
 import { USERS } from '../fixtures'
 
-const authBodySchema = {
-    type: 'object',
-    properties: {
-        email: { type: 'string', format: 'email'},
-        password: { type: 'string'},
-    },
-    required: ['email', 'password'],
-    additionalProperties: false
-} as const
-
-const userSuccessSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'number'},
-        firstName: { type: 'string'},
-        lastName: { type: 'string'},
-        email: { type: 'string'},
-        avatar: { type: 'string'}
-    },
-    required: [ 'id', 'firstName', 'email' ],
-    additionalProperties: false
-}
-
-type AuthLoginBody = FromSchema<typeof authBodySchema>
+type AuthLoginBody = FromSchema<typeof authSchema>
 
 export default async function auth(fastify: FastifyInstance) {
     // log-in a user
     fastify.post<{ Body: AuthLoginBody }>('/auth/login', {
         schema: {
-            body: { user: authBodySchema },
+            body: { user: authSchema },
             response: {
-                '2xx': userSuccessSchema,
+                '2xx': userSchema,
                 '4xx': errorSchema
             }
         }

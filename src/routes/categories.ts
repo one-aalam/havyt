@@ -1,23 +1,14 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { errorSchema } from '../schemas/error'
+import { categorySchema, errorSchema } from '../schemas'
 import { RECIPE_CATEGORIES } from '../fixtures'
 
 /**
  * JSON schema for the API routes
  */
-const categoryBodySchema = {
-    type: 'object',
-    properties: {
-        type: { type: 'string', minLength: 3},
-        name: { type: 'string'},
-        desc: { type: 'string'}
-    },
-    additionalProperties: false
-} as const
 
 const categoryCreateBodySchema = {
-    ...categoryBodySchema,
+    ...categorySchema,
     required: [ 'type' ],
 } as const
 
@@ -31,9 +22,9 @@ const categoryParamsSchema = {
 } as const
 
 const categorySuccessSchema = {
-    ...categoryBodySchema,
+    ...categorySchema,
     properties: {
-        ...categoryBodySchema.properties,
+        ...categorySchema.properties,
         id: { type: 'number'}
     }
 } as const
@@ -114,7 +105,7 @@ export default async function categories(fastify: FastifyInstance) {
         Body: CategoryUpdateBody
     }>('/categories/:id',  { schema: {
         params: categoryParamsSchema,
-        body: categoryBodySchema,
+        body: categorySchema,
         response: {
             '2xx': categorySuccessSchema,
             '4xx': errorSchema,

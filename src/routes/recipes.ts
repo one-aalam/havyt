@@ -1,33 +1,14 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
 import { Recipe } from '../types'
-import { errorSchema } from '../schemas/error'
+import { recipeSchema, errorSchema } from '../schemas'
 import { RECIPES } from '../fixtures'
 
 /**
  * JSON Schemas
  */
-const recipeBodySchema = {
-    type: 'object',
-    properties: {
-        name: { type: 'string' },
-        desc: { type: 'string', default: '' },
-        imageUrl: { type: 'string', default: '' },
-        courseId: { type: 'number',  },
-        cuisineId: { type: 'number' },
-        serves: { type: 'number' },
-        prepTime: { type: 'number', default: 0 },
-        cookingTime: { type: 'number' },
-        ingredients: { type: 'array', items: { type: 'string' }, minItems: 1},
-        directions: { type: 'array', items: { type: 'string' }, minItems: 1},
-        source: { type: 'string', default: '' },
-        tags: { type: 'array', items: { type: 'string' }, minItems: 1 },
-    },
-    additionalProperties: false
-} as const
-
 const recipeBodyCreateSchema = {
-    ...recipeBodySchema,
+    ...recipeSchema,
     required: [ 'name', 'courseId', 'cuisineId', 'serves', 'cookingTime', 'ingredients', 'directions' ]
 } as const
 
@@ -52,9 +33,9 @@ const recipeQuerystringSchema = {
 } as const
 
 const recipeSuccessSchema = {
-    ...recipeBodySchema,
+    ...recipeSchema,
     properties: {
-        ...recipeBodySchema.properties,
+        ...recipeSchema.properties,
         id: { type: 'number'}
     }
 } as const
@@ -138,7 +119,7 @@ export default async function recipes(fastify: FastifyInstance) {
         Body: RecipeUpdateBody
     }>('/recipes/:id', { schema: {
         params: recipeParamsSchema,
-        body: recipeBodySchema,
+        body: recipeSchema,
         response: {
             '2xx': recipeSuccessSchema,
             '4xx': errorSchema
