@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
 import { Recipe } from '../types'
+import { errorSchema } from '../schemas/error'
 import { RECIPES } from '../fixtures'
 
 /**
@@ -17,10 +18,10 @@ const recipeBodySchema = {
         serves: { type: 'number' },
         prepTime: { type: 'number', default: 0 },
         cookingTime: { type: 'number' },
-        ingredients: { type: 'array', items: { type: 'string' }},
-        directions: { type: 'array', items: { type: 'string' }},
+        ingredients: { type: 'array', items: { type: 'string' }, minItems: 1},
+        directions: { type: 'array', items: { type: 'string' }, minItems: 1},
         source: { type: 'string', default: '' },
-        tags: { type: 'array', items: { type: 'string' } },
+        tags: { type: 'array', items: { type: 'string' }, minItems: 1 },
     },
     additionalProperties: false
 } as const
@@ -50,6 +51,14 @@ const recipeQuerystringSchema = {
     },
 } as const
 
+const recipeSuccessSchema = {
+    ...recipeBodySchema,
+    properties: {
+        ...recipeBodySchema.properties,
+        id: { type: 'number'}
+    }
+} as const
+
 /**
  * Types
  */
@@ -72,7 +81,7 @@ export default async function recipes(fastify: FastifyInstance) {
     fastify.get<{
         Querystring: RecipeQuerystring
     }>('/recipes', { schema: {
-        querystring: recipeQuerystringSchema
+        querystring: recipeQuerystringSchema,
     }}, async (req) => {
         const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
         return RECIPES
@@ -92,12 +101,17 @@ export default async function recipes(fastify: FastifyInstance) {
     fastify.get<{
         Params: RecipeParams
     }>('/recipes/:id', { schema: {
-        params: recipeParamsSchema
+        params: recipeParamsSchema,
+        response: {
+            '2xx': recipeSuccessSchema,
+            '4xx': errorSchema
+        }
     }}, async (req, reply) => {
         const recipe = RECIPES.find(recipe => recipe.id === req.params.id)
         if(!recipe) {
             reply.code(404).send({
-                name: 'NotFoundError',
+                statusCode: 404,
+                error: 'NotFoundError',
                 message: 'Not Found'
             })
         }
@@ -105,7 +119,11 @@ export default async function recipes(fastify: FastifyInstance) {
     })
 
     fastify.post<{ Body: RecipeCreateBody }>('/recipes', { schema: {
-        body: recipeBodyCreateSchema
+        body: recipeBodyCreateSchema,
+        response: {
+            '2xx': recipeSuccessSchema,
+            '4xx': errorSchema
+        }
     }}, async (req, reply) => {
         const newRecipe: Recipe  = {
             ...req.body,
@@ -120,13 +138,18 @@ export default async function recipes(fastify: FastifyInstance) {
         Body: RecipeUpdateBody
     }>('/recipes/:id', { schema: {
         params: recipeParamsSchema,
-        body: recipeBodySchema
+        body: recipeBodySchema,
+        response: {
+            '2xx': recipeSuccessSchema,
+            '4xx': errorSchema
+        }
     }}, async (req, reply) => {
 
         const recipe = RECIPES.find(recipe => recipe.id === req.params.id)
         if(!recipe) {
             reply.code(404).send({
-                name: 'NotFoundError',
+                statusCode: 404,
+                error: 'NotFoundError',
                 message: 'Not Found'
             })
         }
@@ -141,7 +164,8 @@ export default async function recipes(fastify: FastifyInstance) {
 
         // It's not you, It's us!'
         reply.code(500).send({
-            name: 'InternalServerError',
+            statusCode: 500,
+            error: 'InternalServerError',
             message: 'Internal Sever Error'
         })
     })
@@ -150,7 +174,11 @@ export default async function recipes(fastify: FastifyInstance) {
     fastify.delete<{
         Params: RecipeParams,
     }>('/recipes/:id', { schema: {
-        params: recipeParamsSchema
+        params: recipeParamsSchema,
+        response: {
+            '2xx': recipeSuccessSchema,
+            '4xx': errorSchema
+        }
     }}, async (req, reply) => {
 
         // get where is it
@@ -158,12 +186,14 @@ export default async function recipes(fastify: FastifyInstance) {
 
         // and delete it
         if(recipeIndex >= 0) {
+            const recipe = RECIPES[recipeIndex]
             RECIPES.splice(recipeIndex, 1)
-            reply.code(200).send({ deleted: true })
+            reply.code(200).send(recipe)
         }
 
         reply.code(404).send({
-            name: 'NotFoundError',
+            statusCode: 404,
+            error: 'NotFoundError',
             message: 'Not Found'
         })
     })

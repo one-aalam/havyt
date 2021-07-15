@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
+import { errorSchema } from '../schemas/error'
 import { RECIPE_CATEGORIES } from '../fixtures'
 
 /**
@@ -8,7 +9,7 @@ import { RECIPE_CATEGORIES } from '../fixtures'
 const categoryBodySchema = {
     type: 'object',
     properties: {
-        type: { type: 'string'},
+        type: { type: 'string', minLength: 3},
         name: { type: 'string'},
         desc: { type: 'string'}
     },
@@ -27,6 +28,14 @@ const categoryParamsSchema = {
     },
     required: [ 'id' ],
     additionalProperties: false
+} as const
+
+const categorySuccessSchema = {
+    ...categoryBodySchema,
+    properties: {
+        ...categoryBodySchema.properties,
+        id: { type: 'number'}
+    }
 } as const
 
 /**
@@ -50,14 +59,19 @@ export default async function categories(fastify: FastifyInstance) {
 
     // get the category by provided id
     fastify.get<{
-        Params: CategoryParams
+        Params: CategoryParams,
     }>('/categories/:id', { schema: {
-       params: categoryParamsSchema
+       params: categoryParamsSchema,
+       response: {
+        '2xx': categorySuccessSchema,
+        '4xx': errorSchema
+       }
     }},async (req, reply) => {
         const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
-                name: 'NotFoundError',
+                statusCode: 404,
+                error: 'NotFoundError',
                 message: 'Not Found'
             })
         }
@@ -65,8 +79,11 @@ export default async function categories(fastify: FastifyInstance) {
     })
 
     fastify.post<{ Body: CategoryCreateBody }>('/categories',  { schema: {
-        params: categoryParamsSchema,
-        body: categoryCreateBodySchema
+        body: categoryCreateBodySchema,
+        response: {
+            '2xx': categorySuccessSchema,
+            '4xx': errorSchema
+        }
      }}, async (req, reply) => {
         const { type, name, desc } = req.body
 
@@ -74,7 +91,8 @@ export default async function categories(fastify: FastifyInstance) {
         const hasCategoryWithProvidedType = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.type === type)
         if(hasCategoryWithProvidedType) {
             reply.code(409).send({
-                name: 'Conflict',
+                statusCode: 409,
+                error: 'Conflict',
                 message: 'Conflict'
             })
         }
@@ -96,14 +114,20 @@ export default async function categories(fastify: FastifyInstance) {
         Body: CategoryUpdateBody
     }>('/categories/:id',  { schema: {
         params: categoryParamsSchema,
-        body: categoryBodySchema
+        body: categoryBodySchema,
+        response: {
+            '2xx': categorySuccessSchema,
+            '4xx': errorSchema,
+            '5xx': errorSchema
+        }
      }}, async (req, reply) => {
 
         // err, and exit early!
         let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
-                name: 'NotFoundError',
+                statusCode: 404,
+                error: 'NotFoundError',
                 message: 'Not Found'
             })
         }
@@ -112,7 +136,8 @@ export default async function categories(fastify: FastifyInstance) {
         const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length >= 0 ? true : false
         if(hasOtherCategoryWithProvidedType) {
             reply.code(409).send({
-                name: 'Conflict',
+                statusCode: 409,
+                error: 'Conflict',
                 message: 'Conflict'
             })
         }
@@ -136,7 +161,8 @@ export default async function categories(fastify: FastifyInstance) {
 
         // It's not you, It's us!'
         reply.code(500).send({
-            name: 'InternalServerError',
+            statusCode: 500,
+            error: 'InternalServerError',
             message: 'Internal Sever Error'
         })
     })
@@ -144,7 +170,11 @@ export default async function categories(fastify: FastifyInstance) {
     fastify.delete<{
         Params: CategoryParams,
     }>('/categories/:id',  { schema: {
-        params: categoryParamsSchema
+        params: categoryParamsSchema,
+        response: {
+        '2xx': categorySuccessSchema,
+        '4xx': errorSchema
+        }
      }}, async (req, reply) => {
 
         // get where is it
@@ -152,12 +182,14 @@ export default async function categories(fastify: FastifyInstance) {
 
         // and delete it
         if(recipeCategoryIndex >= 0) {
+            const recipe = RECIPE_CATEGORIES[recipeCategoryIndex]
             RECIPE_CATEGORIES.splice(recipeCategoryIndex, 1)
-            reply.code(200).send({ deleted: true })
+            reply.code(200).send(recipe)
         }
 
         reply.code(404).send({
-            name: 'NotFoundError',
+            statusCode: 404,
+            error: 'NotFoundError',
             message: 'Not Found'
         })
     })
