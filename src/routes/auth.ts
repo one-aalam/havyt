@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRequest } from 'fastify'
+import { FromSchema } from 'json-schema-to-ts'
 import { USERS } from '../fixtures'
 
 const authBodySchema = {
@@ -7,13 +8,11 @@ const authBodySchema = {
         email: { type: 'string', format: 'email'},
         password: { type: 'string'},
     },
-    required: ['email', 'password']
-}
+    required: ['email', 'password'],
+    additionalProperties: false
+} as const
 
-type AuthLoginBody = {
-    email: string
-    password: string
-}
+type AuthLoginBody = FromSchema<typeof authBodySchema>
 
 export default async function auth(fastify: FastifyInstance) {
     // log-in a user

@@ -1,7 +1,10 @@
 import { FastifyInstance } from 'fastify'
+import { FromSchema } from 'json-schema-to-ts'
 import { RECIPE_CATEGORIES } from '../fixtures'
-import { RecipeCatgeory } from '../types'
 
+/**
+ * JSON schema for the API routes
+ */
 const categoryBodySchema = {
     type: 'object',
     properties: {
@@ -9,28 +12,37 @@ const categoryBodySchema = {
         name: { type: 'string'},
         desc: { type: 'string'}
     },
-}
+    additionalProperties: false
+} as const
 
 const categoryCreateBodySchema = {
     ...categoryBodySchema,
-    required: [ 'type' ]
-}
+    required: [ 'type' ],
+} as const
 
 const categoryParamsSchema = {
     type: 'object',
     properties: {
         id: { type: 'number'}
     },
-    required: [ 'id' ]
-}
+    required: [ 'id' ],
+    additionalProperties: false
+} as const
 
-type CategoryParams = {
-    id: string
-}
+/**
+ * Types
+ */
 
-type CategoryCreateBody = Omit<RecipeCatgeory, 'id'>
+type CategoryParams = FromSchema<typeof categoryParamsSchema>
 
-type CategoryUpdateBody = Partial<RecipeCatgeory>
+type CategoryCreateBody = FromSchema<typeof categoryCreateBodySchema>
+
+type CategoryUpdateBody = Partial<CategoryCreateBody>
+
+/**
+ *
+ * @param fastify
+ */
 
 export default async function categories(fastify: FastifyInstance) {
     // get all the categories
@@ -42,7 +54,7 @@ export default async function categories(fastify: FastifyInstance) {
     }>('/categories/:id', { schema: {
        params: categoryParamsSchema
     }},async (req, reply) => {
-        const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === parseInt(req.params.id))
+        const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
                 name: 'NotFoundError',
@@ -88,7 +100,7 @@ export default async function categories(fastify: FastifyInstance) {
      }}, async (req, reply) => {
 
         // err, and exit early!
-        let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === parseInt(req.params.id))
+        let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
                 name: 'NotFoundError',
@@ -97,7 +109,7 @@ export default async function categories(fastify: FastifyInstance) {
         }
 
         // enforce constraints like unique-ness
-        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== parseInt(req.params.id) && recipeCategory.type === type).length >= 0 ? true : false
+        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length >= 0 ? true : false
         if(hasOtherCategoryWithProvidedType) {
             reply.code(409).send({
                 name: 'Conflict',
@@ -115,7 +127,7 @@ export default async function categories(fastify: FastifyInstance) {
         if (desc && recipeCategory?.desc) recipeCategory.desc = desc
 
         // get where is it
-        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === parseInt(req.params.id))
+        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
         // and update it
         if(recipeCategoryIndex && recipeCategory) {
             RECIPE_CATEGORIES[recipeCategoryIndex] = recipeCategory
@@ -136,7 +148,7 @@ export default async function categories(fastify: FastifyInstance) {
      }}, async (req, reply) => {
 
         // get where is it
-        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === parseInt(req.params.id))
+        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
 
         // and delete it
         if(recipeCategoryIndex >= 0) {
