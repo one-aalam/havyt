@@ -1,49 +1,18 @@
 import { FastifyInstance } from 'fastify'
-import { FromSchema } from 'json-schema-to-ts'
-import { categorySchema, errorSchema } from '../../schemas'
+import {
+    getAllCategoriesSchema,
+    getCategorySchema,
+    createCategorySchema,
+    updateCategorySchema,
+    deleteCategorySchema
+} from './schema'
+import {
+    CategoryParams,
+    CategoryCreateBody,
+    CategoryUpdateBody,
+} from './types'
 import { RECIPE_CATEGORIES } from '../../fixtures'
 
-/**
- * JSON schema for the API routes
- */
-
-const categoryCreateBodySchema = {
-    ...categorySchema,
-    required: [ 'type' ],
-} as const
-
-export const categoryUpdateSchema = {
-    ...categoryCreateBodySchema,
-    $id: 'categoryUpdateSchema',
-    required: [],
-} as const
-
-const categoryParamsSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'number'}
-    },
-    required: [ 'id' ],
-    additionalProperties: false
-} as const
-
-const categorySuccessSchema = {
-    ...categorySchema,
-    properties: {
-        ...categorySchema.properties,
-        id: { type: 'number'}
-    }
-} as const
-
-/**
- * Types
- */
-
-type CategoryParams = FromSchema<typeof categoryParamsSchema>
-
-type CategoryCreateBody = FromSchema<typeof categoryCreateBodySchema>
-
-type CategoryUpdateBody = Partial<CategoryCreateBody>
 
 /**
  *
@@ -52,25 +21,12 @@ type CategoryUpdateBody = Partial<CategoryCreateBody>
 
 export default async function categories(fastify: FastifyInstance) {
     // get all the categories
-    fastify.get('/categories', { schema: {
-        response: {
-            200: {
-                type: 'array',
-                items: categorySuccessSchema
-            }
-        }
-    }}, async () => RECIPE_CATEGORIES)
+    fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => RECIPE_CATEGORIES)
 
     // get the category by provided id
     fastify.get<{
         Params: CategoryParams,
-    }>('/categories/:id', { schema: {
-       params: categoryParamsSchema,
-       response: {
-        '2xx': categorySuccessSchema,
-        '4xx': errorSchema
-       }
-    }},async (req, reply) => {
+    }>('/categories/:id', { schema: getCategorySchema },async (req, reply) => {
         const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
@@ -82,13 +38,7 @@ export default async function categories(fastify: FastifyInstance) {
         return recipeCategory
     })
 
-    fastify.post<{ Body: CategoryCreateBody }>('/categories',  { schema: {
-        body: categoryCreateBodySchema,
-        response: {
-            '2xx': categorySuccessSchema,
-            '4xx': errorSchema
-        }
-     }}, async (req, reply) => {
+    fastify.post<{ Body: CategoryCreateBody }>('/categories',  { schema: createCategorySchema }, async (req, reply) => {
         const { type, name, desc } = req.body
 
         // enforce constraints like unique-ness
@@ -116,15 +66,7 @@ export default async function categories(fastify: FastifyInstance) {
     fastify.put<{
         Params: CategoryParams,
         Body: CategoryUpdateBody
-    }>('/categories/:id',  { schema: {
-        params: categoryParamsSchema,
-        body: categoryUpdateSchema,
-        response: {
-            '2xx': categorySuccessSchema,
-            '4xx': errorSchema,
-            '5xx': errorSchema
-        }
-     }}, async (req, reply) => {
+    }>('/categories/:id',  { schema: updateCategorySchema }, async (req, reply) => {
 
         // err, and exit early!
         let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
@@ -173,13 +115,7 @@ export default async function categories(fastify: FastifyInstance) {
 
     fastify.delete<{
         Params: CategoryParams,
-    }>('/categories/:id',  { schema: {
-        params: categoryParamsSchema,
-        response: {
-        '2xx': categorySuccessSchema,
-        '4xx': errorSchema
-        },
-     }}, async (req, reply) => {
+    }>('/categories/:id',  { schema: deleteCategorySchema }, async (req, reply) => {
 
         // get where is it
         const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
