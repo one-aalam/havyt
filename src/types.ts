@@ -25,17 +25,3 @@ export type Recipe = {
   source?: string
   tags?: string[]
 }
-
-export type RecipeCatgeory = {
-  id: number
-  type: string
-  name?: string
-  desc?: string
-}
-
-export type RecipeCatgeoryItem = {
-  id: number
-  categoryId: number
-  name?: string
-  desc?: string
-}

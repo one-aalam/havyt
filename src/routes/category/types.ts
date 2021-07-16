@@ -12,3 +12,10 @@ import { categorySchema, categoryCreateSchema, categoryParamsSchema } from './sc
  export type CategoryCreateBody = FromSchema<typeof categoryCreateSchema>
 
  export type CategoryUpdateBody = Partial<CategoryCreateBody>
+
+ export type CategoryItem = {
+    id: number
+    categoryId: number
+    name: string
+    desc?: string
+}

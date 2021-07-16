@@ -1,6 +1,6 @@
-import { RecipeCatgeoryItem } from '../../types'
+import { CategoryItem } from '../types'
 
-export const RECIPE_CATEGORY_CUISINES: RecipeCatgeoryItem[] = [
+export const CATEGORY_CUISINES: CategoryItem[] = [
   {
     id: 1,
     name: 'American',

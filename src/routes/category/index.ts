@@ -11,7 +11,7 @@ import {
     CategoryCreateBody,
     CategoryUpdateBody,
 } from './types'
-import { RECIPE_CATEGORIES } from '../../fixtures'
+import { CATEGORIES } from './fixtures'
 
 
 /**
@@ -21,13 +21,13 @@ import { RECIPE_CATEGORIES } from '../../fixtures'
 
 export default async function categories(fastify: FastifyInstance) {
     // get all the categories
-    fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => RECIPE_CATEGORIES)
+    fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => CATEGORIES)
 
     // get the category by provided id
     fastify.get<{
         Params: CategoryParams,
     }>('/categories/:id', { schema: getCategorySchema },async (req, reply) => {
-        const recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
+        const recipeCategory = CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
                 statusCode: 404,
@@ -42,7 +42,7 @@ export default async function categories(fastify: FastifyInstance) {
         const { type, name, desc } = req.body
 
         // enforce constraints like unique-ness
-        const hasCategoryWithProvidedType = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.type === type)
+        const hasCategoryWithProvidedType = CATEGORIES.find(recipeCategory => recipeCategory.type === type)
         if(hasCategoryWithProvidedType) {
             reply.code(409).send({
                 statusCode: 409,
@@ -54,12 +54,12 @@ export default async function categories(fastify: FastifyInstance) {
         // deletions leave the DB's in a state where id's cannot be just safely incremented based on the count
         // here we're adding one to the last id in the available records, which is a more safer way to do this
         const newCategory = {
-            id: RECIPE_CATEGORIES[RECIPE_CATEGORIES.length - 1].id + 1,
+            id: CATEGORIES[CATEGORIES.length - 1].id + 1,
             type,
             name: name || type,
             desc: desc || ''
         }
-        RECIPE_CATEGORIES.push(newCategory)
+        CATEGORIES.push(newCategory)
         reply.code(201).send(newCategory)
     })
 
@@ -69,7 +69,7 @@ export default async function categories(fastify: FastifyInstance) {
     }>('/categories/:id',  { schema: updateCategorySchema }, async (req, reply) => {
 
         // err, and exit early!
-        let recipeCategory = RECIPE_CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
+        let recipeCategory = CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
         if(!recipeCategory) {
             reply.code(404).send({
                 statusCode: 404,
@@ -83,7 +83,7 @@ export default async function categories(fastify: FastifyInstance) {
         const { type, name, desc } = req.body
 
         // enforce constraints like unique-ness
-        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length
+        const hasOtherCategoryWithProvidedType = CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length
         if(hasOtherCategoryWithProvidedType) {
             reply.code(409).send({
                 statusCode: 409,
@@ -98,10 +98,10 @@ export default async function categories(fastify: FastifyInstance) {
         if (desc && recipeCategory?.desc) recipeCategory.desc = desc
 
         // get where is it
-        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
+        const recipeCategoryIndex = CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
         // and update it
         if(recipeCategoryIndex >= 0 && recipeCategory) {
-            RECIPE_CATEGORIES[recipeCategoryIndex] = recipeCategory
+            CATEGORIES[recipeCategoryIndex] = recipeCategory
             reply.code(200).send(recipeCategory)
         }
 
@@ -118,12 +118,12 @@ export default async function categories(fastify: FastifyInstance) {
     }>('/categories/:id',  { schema: deleteCategorySchema }, async (req, reply) => {
 
         // get where is it
-        const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
+        const recipeCategoryIndex = CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
 
         // and delete it
         if(recipeCategoryIndex >= 0) {
-            const recipe = RECIPE_CATEGORIES[recipeCategoryIndex]
-            RECIPE_CATEGORIES.splice(recipeCategoryIndex, 1)
+            const recipe = CATEGORIES[recipeCategoryIndex]
+            CATEGORIES.splice(recipeCategoryIndex, 1)
             reply.code(200).send(recipe)
         }
 
