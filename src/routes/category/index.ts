@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { categorySchema, errorSchema } from '../schemas'
-import { RECIPE_CATEGORIES } from '../fixtures'
+import { categorySchema, errorSchema } from '../../schemas'
+import { RECIPE_CATEGORIES } from '../../fixtures'
 
 /**
  * JSON schema for the API routes
@@ -10,6 +10,12 @@ import { RECIPE_CATEGORIES } from '../fixtures'
 const categoryCreateBodySchema = {
     ...categorySchema,
     required: [ 'type' ],
+} as const
+
+export const categoryUpdateSchema = {
+    ...categoryCreateBodySchema,
+    $id: 'categoryUpdateSchema',
+    required: [],
 } as const
 
 const categoryParamsSchema = {
@@ -50,7 +56,7 @@ export default async function categories(fastify: FastifyInstance) {
         response: {
             200: {
                 type: 'array',
-                items: categorySchema
+                items: categorySuccessSchema
             }
         }
     }}, async () => RECIPE_CATEGORIES)
@@ -112,7 +118,7 @@ export default async function categories(fastify: FastifyInstance) {
         Body: CategoryUpdateBody
     }>('/categories/:id',  { schema: {
         params: categoryParamsSchema,
-        body: categorySchema,
+        body: categoryUpdateSchema,
         response: {
             '2xx': categorySuccessSchema,
             '4xx': errorSchema,
@@ -130,8 +136,12 @@ export default async function categories(fastify: FastifyInstance) {
             })
         }
 
+        // looks like we can go ahead and update the values
+        // get `em
+        const { type, name, desc } = req.body
+
         // enforce constraints like unique-ness
-        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length >= 0 ? true : false
+        const hasOtherCategoryWithProvidedType = RECIPE_CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length
         if(hasOtherCategoryWithProvidedType) {
             reply.code(409).send({
                 statusCode: 409,
@@ -139,10 +149,6 @@ export default async function categories(fastify: FastifyInstance) {
                 message: 'Conflict'
             })
         }
-
-        // looks like we can go ahead and update the values
-        // get `em
-        const { type, name, desc } = req.body
 
         // update `em
         if (type && recipeCategory?.type) recipeCategory.type = type
@@ -152,7 +158,7 @@ export default async function categories(fastify: FastifyInstance) {
         // get where is it
         const recipeCategoryIndex = RECIPE_CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
         // and update it
-        if(recipeCategoryIndex && recipeCategory) {
+        if(recipeCategoryIndex >= 0 && recipeCategory) {
             RECIPE_CATEGORIES[recipeCategoryIndex] = recipeCategory
             reply.code(200).send(recipeCategory)
         }
@@ -172,7 +178,7 @@ export default async function categories(fastify: FastifyInstance) {
         response: {
         '2xx': categorySuccessSchema,
         '4xx': errorSchema
-        }
+        },
      }}, async (req, reply) => {
 
         // get where is it

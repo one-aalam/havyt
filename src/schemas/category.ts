@@ -6,5 +6,6 @@ export const categorySchema = {
         name: { type: 'string'},
         desc: { type: 'string'}
     },
+    required: ['type'],
     additionalProperties: false
 } as const

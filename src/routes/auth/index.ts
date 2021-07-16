@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import { authSchema, userSchema, errorSchema } from '../schemas'
-import { AuthLoginPayload } from '../types.derived'
-import { USERS } from '../fixtures'
+import { authSchema, userSchema, errorSchema } from '../../schemas'
+import { AuthLoginPayload } from '../../types.derived'
+import { USERS } from '../../fixtures'
 
 export default async function auth(fastify: FastifyInstance) {
     // log-in a user

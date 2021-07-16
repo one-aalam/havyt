@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { recipeSchema, errorSchema } from '../schemas'
-import { RECIPES } from '../fixtures'
+import { recipeSchema, errorSchema } from '../../schemas'
+import { RECIPES } from '../../fixtures'
 
 /**
  * JSON Schemas

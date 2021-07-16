@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'
-import { userSchema, errorSchema } from '../schemas'
-import { USERS } from '../fixtures'
+import { userSchema, errorSchema } from '../../schemas'
+import { USERS } from '../../fixtures'
 
 const userParamsSchema = {
     type: 'object',
