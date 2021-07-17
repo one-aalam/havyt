@@ -3,3 +3,4 @@ dist
 .env
 idea
 .nyc_output
+db/havyt.stormdb
