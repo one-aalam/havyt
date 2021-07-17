@@ -1,4 +1,7 @@
 import { FastifyInstance } from 'fastify'
+import createError from 'http-errors'
+import StormDB from 'stormdb'
+import { StoreService } from '../../lib/store'
 import {
     getAllCategoriesSchema,
     getCategorySchema,
@@ -7,6 +10,7 @@ import {
     deleteCategorySchema
 } from './schemas'
 import {
+    Category,
     CategoryParams,
     CategoryCreateBody,
     CategoryUpdateBody,
@@ -20,117 +24,60 @@ import { CATEGORIES } from './fixtures'
  */
 
 export default async function categories(fastify: FastifyInstance) {
+
+    const categoryService = new StoreService<Category>({
+        coll: 'categories',
+        db: new StormDB(new StormDB.localFileEngine(process.env?.APP_FILE_DB || 'db/havyt.stormdb' )),
+        data: CATEGORIES,
+        unique: 'type'
+    })
+
     // get all the categories
-    fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => CATEGORIES)
+    fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => categoryService.getAll())
 
     // get the category by provided id
     fastify.get<{
         Params: CategoryParams,
-    }>('/categories/:id', { schema: getCategorySchema },async (req, reply) => {
-        const recipeCategory = CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
-        if(!recipeCategory) {
-            reply.code(404).send({
-                statusCode: 404,
-                error: 'NotFoundError',
-                message: 'Not Found'
-            })
+    }>('/categories/:id', { schema: getCategorySchema },async (req) => {
+        try {
+            return await categoryService.getById(req.params.id)
+        } catch(e) {
+            return createError(e.code)
         }
-        return recipeCategory
     })
 
     fastify.post<{ Body: CategoryCreateBody }>('/categories',  { schema: createCategorySchema }, async (req, reply) => {
-        const { type, name, desc } = req.body
-
-        // enforce constraints like unique-ness
-        const hasCategoryWithProvidedType = CATEGORIES.find(recipeCategory => recipeCategory.type === type)
-        if(hasCategoryWithProvidedType) {
-            reply.code(409).send({
-                statusCode: 409,
-                error: 'Conflict',
-                message: 'Conflict'
+        try {
+            const { type, name, desc } = req.body
+            const category = await categoryService.create({
+                type,
+                name: name || type,
+                desc: desc || ''
             })
+            reply.code(201).send(category)
+        } catch (e) {
+            return createError(e.code)
         }
-
-        // deletions leave the DB's in a state where id's cannot be just safely incremented based on the count
-        // here we're adding one to the last id in the available records, which is a more safer way to do this
-        const newCategory = {
-            id: CATEGORIES[CATEGORIES.length - 1].id + 1,
-            type,
-            name: name || type,
-            desc: desc || ''
-        }
-        CATEGORIES.push(newCategory)
-        reply.code(201).send(newCategory)
     })
 
     fastify.put<{
         Params: CategoryParams,
         Body: CategoryUpdateBody
-    }>('/categories/:id',  { schema: updateCategorySchema }, async (req, reply) => {
-
-        // err, and exit early!
-        let recipeCategory = CATEGORIES.find(recipeCategory => recipeCategory.id === req.params.id)
-        if(!recipeCategory) {
-            reply.code(404).send({
-                statusCode: 404,
-                error: 'NotFoundError',
-                message: 'Not Found'
-            })
+    }>('/categories/:id',  { schema: updateCategorySchema }, async (req) => {
+        try {
+            return await categoryService.updateById(req.params.id, req.body)
+        } catch (e) {
+            return createError(e.code)
         }
-
-        // looks like we can go ahead and update the values
-        // get `em
-        const { type, name, desc } = req.body
-
-        // enforce constraints like unique-ness
-        const hasOtherCategoryWithProvidedType = CATEGORIES.filter(recipeCategory => recipeCategory.id !== req.params.id && recipeCategory.type === type).length
-        if(hasOtherCategoryWithProvidedType) {
-            reply.code(409).send({
-                statusCode: 409,
-                error: 'Conflict',
-                message: 'Conflict'
-            })
-        }
-
-        // update `em
-        if (type && recipeCategory?.type) recipeCategory.type = type
-        if (name && recipeCategory?.name) recipeCategory.name = name
-        if (desc && recipeCategory?.desc) recipeCategory.desc = desc
-
-        // get where is it
-        const recipeCategoryIndex = CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
-        // and update it
-        if(recipeCategoryIndex >= 0 && recipeCategory) {
-            CATEGORIES[recipeCategoryIndex] = recipeCategory
-            reply.code(200).send(recipeCategory)
-        }
-
-        // It's not you, It's us!'
-        reply.code(500).send({
-            statusCode: 500,
-            error: 'InternalServerError',
-            message: 'Internal Sever Error'
-        })
     })
 
     fastify.delete<{
         Params: CategoryParams,
-    }>('/categories/:id',  { schema: deleteCategorySchema }, async (req, reply) => {
-
-        // get where is it
-        const recipeCategoryIndex = CATEGORIES.findIndex(recipeCategory => recipeCategory.id === req.params.id)
-
-        // and delete it
-        if(recipeCategoryIndex >= 0) {
-            const recipe = CATEGORIES[recipeCategoryIndex]
-            CATEGORIES.splice(recipeCategoryIndex, 1)
-            reply.code(200).send(recipe)
+    }>('/categories/:id',  { schema: deleteCategorySchema }, async (req) => {
+        try {
+            return await categoryService.deleteById(req.params.id)
+        } catch (e) {
+            return createError(e.code)
         }
-
-        reply.code(404).send({
-            statusCode: 404,
-            error: 'NotFoundError',
-            message: 'Not Found'
-        })
     })
 }

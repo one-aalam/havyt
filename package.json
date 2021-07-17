@@ -18,6 +18,7 @@
   "author": "Aftab Alam",
   "license": "MIT",
   "devDependencies": {
+    "@types/http-errors": "^1.8.1",
     "@types/node": "^16.3.1",
     "@types/tap": "^15.0.5",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
@@ -37,6 +38,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "fastify": "^3.19.0",
+    "http-errors": "^1.8.0",
     "stormdb": "^0.5.1"
   },
   "husky": {

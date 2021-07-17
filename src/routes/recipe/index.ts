@@ -1,4 +1,7 @@
 import { FastifyInstance } from 'fastify'
+import createError from 'http-errors'
+import StormDB from 'stormdb'
+import { StoreService } from '../../lib/store'
 import {
     getAllRecipesSchema,
     getRecipeSchema,
@@ -16,12 +19,19 @@ import {
 import { RECIPES } from './fixtures'
 
 export default async function recipes(fastify: FastifyInstance) {
-    // get all recipes having the provided `tag`, `cuisineId`, `categoryId`, or range, or all the recipes
+
+    const recipeService = new StoreService<Recipe>({
+        coll: 'recipes',
+        db: new StormDB(new StormDB.localFileEngine(process.env?.APP_FILE_DB || 'db/havyt.stormdb' )),
+        data: RECIPES,
+    })
+
     fastify.get<{
         Querystring: RecipeQuerystring
     }>('/recipes', { schema: getAllRecipesSchema}, async (req) => {
         const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
-        return RECIPES
+        const recipes = await recipeService.getAll()
+        return recipes
             .filter(recipe =>
                 !tag || recipe.tags?.map(tag => tag.toLowerCase()).includes(tag)
             )
@@ -37,77 +47,42 @@ export default async function recipes(fastify: FastifyInstance) {
     // get the recipe by provided id
     fastify.get<{
         Params: RecipeParams
-    }>('/recipes/:id', { schema: getRecipeSchema }, async (req, reply) => {
-        const recipe = RECIPES.find(recipe => recipe.id === req.params.id)
-        if(!recipe) {
-            reply.code(404).send({
-                statusCode: 404,
-                error: 'NotFoundError',
-                message: 'Not Found'
-            })
+    }>('/recipes/:id', { schema: getRecipeSchema }, async (req) => {
+        try {
+            return await recipeService.getById(req.params.id)
+        } catch(e) {
+            return createError(e.code)
         }
-        return recipe
     })
 
     fastify.post<{ Body: RecipeCreateBody }>('/recipes', { schema: createRecipeSchema }, async (req, reply) => {
-        // there are checks like existence of provided `courseId` or `cuisineId` we're not doing here...do it as an exercise
-        const newRecipe: Recipe  = {
-            ...req.body,
-            id: RECIPES[RECIPES.length - 1].id + 1,
+        try {
+            const recipe = await recipeService.create(req.body)
+            reply.code(201).send(recipe)
+        } catch (e) {
+            return createError(e.code)
         }
-        RECIPES.push(newRecipe)
-        reply.code(201).send(newRecipe)
     })
 
     fastify.put<{
         Params: RecipeParams,
         Body: RecipeUpdateBody
-    }>('/recipes/:id', { schema: updateRecipeSchema}, async (req, reply) => {
-
-        const recipe = RECIPES.find(recipe => recipe.id === req.params.id)
-        if(!recipe) {
-            reply.code(404).send({
-                statusCode: 404,
-                error: 'NotFoundError',
-                message: 'Not Found'
-            })
+    }>('/recipes/:id', { schema: updateRecipeSchema}, async (req) => {
+        try {
+            return await recipeService.updateById(req.params.id, req.body)
+        } catch (e) {
+            return createError(e.code)
         }
-
-        // get where is it
-        const recipeIndex = RECIPES.findIndex(recipe => recipe.id === req.params.id)
-        // and update it
-        if(recipeIndex >= 0 && recipe) {
-            RECIPES[recipeIndex] = {...recipe, ...req.body}
-            reply.code(200).send(recipe)
-        }
-
-        // It's not you, It's us!'
-        reply.code(500).send({
-            statusCode: 500,
-            error: 'InternalServerError',
-            message: 'Internal Sever Error'
-        })
     })
 
 
     fastify.delete<{
         Params: RecipeParams,
     }>('/recipes/:id', { schema: deleteRecipeSchema}, async (req, reply) => {
-
-        // get where is it
-        const recipeIndex = RECIPES.findIndex(recipe => recipe.id === req.params.id)
-
-        // and delete it
-        if(recipeIndex >= 0) {
-            const recipe = RECIPES[recipeIndex]
-            RECIPES.splice(recipeIndex, 1)
-            reply.code(200).send(recipe)
+        try {
+            return await recipeService.deleteById(req.params.id)
+        } catch (e) {
+            return createError(e.code)
         }
-
-        reply.code(404).send({
-            statusCode: 404,
-            error: 'NotFoundError',
-            message: 'Not Found'
-        })
     })
 }
