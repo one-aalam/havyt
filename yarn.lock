@@ -3206,6 +3206,11 @@ stack-utils@^2.0.1:
   dependencies:
     escape-string-regexp "^2.0.0"
 
+stormdb@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/stormdb/-/stormdb-0.5.1.tgz#5ec6f09057bc2fb729e532ddf01f854707c8a175"
+  integrity sha512-HmK2XfUu/5ytM3OLVRuOqFwgRj5keiibkgzslUthrUKi6R/ly71NIVTku99AWhrJMAg9MIIVSJ8X1Yt3tXKrsQ==
+
 string-argv@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.1.tgz#95e2fbec0427ae19184935f816d74aaa4c5c19da"
