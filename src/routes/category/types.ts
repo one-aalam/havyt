@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts'
-import { categorySchema, categoryCreateSchema, categoryParamsSchema } from './schema'
+import { categorySchema, categoryCreateSchema, categoryParamsSchema } from './schemas'
 
 /**
  * Types

@@ -1,4 +1,4 @@
-import { errorSchema } from '../../schemas'
+import { errorSchema } from '../../lib/commons/schemas'
 /**
  * JSON schema for the API routes
  */

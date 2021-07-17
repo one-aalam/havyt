@@ -1,4 +1,4 @@
-import { Recipe } from '../types'
+import { Recipe } from './types'
 
 export const RECIPES: Recipe[] = [
   {

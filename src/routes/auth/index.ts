@@ -1,18 +1,12 @@
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import { authSchema, userSchema, errorSchema } from '../../schemas'
-import { AuthLoginPayload } from '../../types.derived'
-import { USERS } from '../../fixtures'
+import { loginSchema } from './schemas'
+import { AuthLoginPayload } from './types'
+import { USERS } from '../user/fixtures'
 
 export default async function auth(fastify: FastifyInstance) {
     // log-in a user
     fastify.post<{ Body: AuthLoginPayload }>('/auth/login', {
-        schema: {
-            body: { user: authSchema },
-            response: {
-                '2xx': userSchema,
-                '4xx': errorSchema
-            }
-        }
+        schema: loginSchema
     },async (req: FastifyRequest, reply) => {
         // @ts-ignore
         const { email, password } = req.body

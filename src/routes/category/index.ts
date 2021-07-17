@@ -5,7 +5,7 @@ import {
     createCategorySchema,
     updateCategorySchema,
     deleteCategorySchema
-} from './schema'
+} from './schemas'
 import {
     CategoryParams,
     CategoryCreateBody,

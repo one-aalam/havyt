@@ -1,3 +1,6 @@
+import { errorSchema } from '../../lib/commons/schemas'
+import { userSchema } from '../user/schemas'
+
 export const authSchema = {
     $id: 'authSchema',
     type: 'object',
@@ -8,3 +11,11 @@ export const authSchema = {
     required: ['email', 'password'],
     additionalProperties: false
 } as const
+
+export const loginSchema = {
+    body: { user: authSchema },
+    response: {
+        '2xx': userSchema,
+        '4xx': errorSchema
+    }
+}
