@@ -1,8 +1,8 @@
 import t, { test } from 'tap'
 
 import { buildServer } from '../../app'
-import { Recipe } from '../../types'
-import { RECIPES } from '../../fixtures'
+import { Recipe } from '../../routes/recipe/types'
+import { RECIPES } from '../../routes/recipe/fixtures'
 
 test('GET /recipes/1 - should return the recipe with id 1', async t => {
     const fastify = buildServer()
@@ -25,7 +25,10 @@ test('GET /recipes/50 - should return not found', async t => {
     })
 
     t.equal(res.statusCode, 404)
-    t.same(res.body, 'Not Found')
+    t.same(res.json(), {
+        name: 'NotFoundError',
+        message: 'Not Found'
+    })
 })
 
 test('GET /recipes - should return the recipes (upto 10 records) when none of the query params are there', async t => {

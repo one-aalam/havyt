@@ -1,7 +1,7 @@
 import t, { test } from 'tap'
 
 import { buildServer } from '../../app'
-import { USERS } from '../../fixtures'
+import { USERS } from '../../routes/user/fixtures'
 
 test('GET /users - should return all the users', async t => {
     const fastify = buildServer()
@@ -33,5 +33,8 @@ test('GET /users/50 - should return not found', async t => {
     })
 
     t.equal(res.statusCode, 404)
-    t.same(res.body, 'Not Found')
+    t.same(res.json(), {
+        name: 'NotFoundError',
+        message: 'Not Found'
+    })
 })
