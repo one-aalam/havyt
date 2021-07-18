@@ -1,4 +1,5 @@
 import StormDB from 'stormdb'
+import { AppColl } from '../commons/types'
 
 export interface IHasIdentity {
     id: number,
@@ -16,10 +17,10 @@ export interface IRepository<T> {
 }
 
 // let's maintain it here for now
-export type Collection = 'categories' | 'recipes'
+
 export type StoreServiceOptions<T> = {
     db: StormDB | undefined
-    coll?: Collection
+    coll?: AppColl
     data?: T[]
     unique?: keyof T | false// single key for now
 }

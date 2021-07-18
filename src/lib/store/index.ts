@@ -2,10 +2,6 @@ import StormDB from 'stormdb'
 import { StoreItemNotFoundError, StoreItemConflictError } from './store-error'
 import { IHasIdentity, IRepository, StoreServiceOptions} from './types'
 
-
-/**
- *
- */
 export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     private _db: StormDB | undefined
     private _coll: string
