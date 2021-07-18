@@ -5,17 +5,17 @@ import { categorySchema, categoryCreateSchema, categoryParamsSchema } from './sc
  * Types
  */
 
- export type Category = Required<FromSchema<typeof categorySchema>>
+export type Category = Required<FromSchema<typeof categorySchema>>
 
- export type CategoryParams = FromSchema<typeof categoryParamsSchema>
+export type CategoryParams = FromSchema<typeof categoryParamsSchema>
 
- export type CategoryCreateBody = FromSchema<typeof categoryCreateSchema>
+export type CategoryCreateBody = FromSchema<typeof categoryCreateSchema>
 
- export type CategoryUpdateBody = Partial<CategoryCreateBody>
+export type CategoryUpdateBody = Partial<CategoryCreateBody>
 
- export type CategoryItem = {
-    id: number
-    categoryId: number
-    name: string
-    desc?: string
+export type CategoryItem = {
+  id: number
+  categoryId: number
+  name: string
+  desc?: string
 }

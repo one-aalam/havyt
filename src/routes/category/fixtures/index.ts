@@ -7,12 +7,12 @@ export const CATEGORIES: Category[] = [
     id: 1,
     type: 'cuisine',
     name: 'Cuisines',
-    desc: ''
+    desc: '',
   },
   {
     id: 2,
     type: 'course',
     name: 'Courses',
-    desc: ''
+    desc: '',
   },
 ]

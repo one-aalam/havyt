@@ -6,18 +6,17 @@ export type EnvConfig = FromSchema<typeof envSchema>
 export type APIError = FromSchema<typeof errorSchema>
 
 export interface IHasIdentity {
-    id: number,
-    [key: string]: any
+  id: number
+  [key: string]: any
 }
 
 export type AppColl = keyof typeof storeConfig
 
-
 export type AppCollEntryConfig = {
-    data?: IHasIdentity[],
-    unique?: string
+  data?: IHasIdentity[]
+  unique?: string
 }
 
 export type AppCollConfig = {
-    [key:string]: AppCollEntryConfig
+  [key: string]: AppCollEntryConfig
 }

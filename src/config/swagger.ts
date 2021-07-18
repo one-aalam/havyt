@@ -1,4 +1,4 @@
 export default {
-    routePrefix: '/documentation',
-    exposeRoute: true
+  routePrefix: '/documentation',
+  exposeRoute: true,
 }
