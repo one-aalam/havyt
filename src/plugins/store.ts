@@ -1,12 +1,13 @@
 import { FastifyInstance } from 'fastify'
 import StormDB from 'stormdb'
 import fp from 'fastify-plugin'
+import { join, dirname } from 'path'
 import { IHasIdentity, AppColl, AppCollConfig } from '../lib/commons/types'
 import { StoreService } from '../lib/store'
 
-
  const store = async (fastify: FastifyInstance, config: AppCollConfig) => {
-    const db = new StormDB(new StormDB.localFileEngine(fastify.config.APP_FILE_DB))
+     // @ts-ignore
+    const db = new StormDB(new StormDB.localFileEngine(join(dirname(require.main.filename), '..', fastify.config.APP_FILE_DB)))
     const dbPopulated = Object.keys(config).filter(coll => db.get(coll).value()).length
 
     if(!dbPopulated) {

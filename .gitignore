@@ -4,3 +4,4 @@ dist
 idea
 .nyc_output
 db/havyt.stormdb
+yarn-error.log
