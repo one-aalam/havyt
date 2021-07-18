@@ -23,7 +23,7 @@ export const categorySchema = {
         ...categoryCreateSchema.properties
     },
     required: ['id', 'type', 'name' ],
-    additionalProperties: false
+    additionalProperties: false,
 } as const
 
 export const categoryUpdateSchema = {

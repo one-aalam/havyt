@@ -2,6 +2,7 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import envConfig from './config/env'
 import storeConfig from './config/store'
+import swaggerConfig from './config/swagger'
 
 export const buildServer = (): FastifyInstance => {
     // Instantiate the Fastify server
@@ -12,12 +13,14 @@ export const buildServer = (): FastifyInstance => {
     })
 
     fastify.register(import('fastify-compress'))
+    fastify.register(import('fastify-swagger'), swaggerConfig)
 
     // fastify.register(import('./plugins/logan'))
+    // Register custom App plugins
     fastify.register(import('./plugins/env'), envConfig)
-
     fastify.register(import('./plugins/store'), storeConfig)
-    // Load and register route files
+
+    // Load and register API route files
     fastify.register(import('./routes/user'))
     fastify.register(import('./routes/recipe'))
     fastify.register(import('./routes/category'))
