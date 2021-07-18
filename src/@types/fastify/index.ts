@@ -1,6 +1,5 @@
 
 import { FastifyRequest } from 'fastify'
-import http from 'http'
 
 import { StoreService } from '../../lib/store'
 import { IHasIdentity } from '../../lib/store/types'
