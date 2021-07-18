@@ -75,8 +75,8 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
       }
 
       let item = this._data[index]
-      // @ts-ignore
       const updates = Object.entries(attrs).reduce(
+        // @ts-ignore
         (acc, [key, val]: [string, string]) => (val ? ((acc[key] = val), acc) : acc),
         {}
       )

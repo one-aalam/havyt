@@ -9,6 +9,7 @@ const store = async (fastify: FastifyInstance, config: AppCollConfig) => {
   // @ts-ignore
   const db = new StormDB(
     new StormDB.localFileEngine(
+      // @ts-ignore
       join(dirname(require.main.filename), '..', fastify.config.APP_FILE_DB)
     )
   )
