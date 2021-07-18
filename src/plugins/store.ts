@@ -1,21 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import StormDB from 'stormdb'
 import fp from 'fastify-plugin'
+import { IHasIdentity, AppColl, AppCollConfig } from '../lib/commons/types'
 import { StoreService } from '../lib/store'
-import { IHasIdentity } from '../lib/store/types'
-import { AppColl } from '../lib/commons/types'
-
-type CollEntryConfig = {
-    data?: IHasIdentity[],
-    unique?: string
-}
-
-export type CollConfig = {
-    [key:string]: CollEntryConfig
-}
 
 
- const store = async (fastify: FastifyInstance, config: CollConfig) => {
+ const store = async (fastify: FastifyInstance, config: AppCollConfig) => {
     const db = new StormDB(new StormDB.localFileEngine(fastify.config.APP_FILE_DB))
     const dbPopulated = Object.keys(config).filter(coll => db.get(coll).value()).length
 

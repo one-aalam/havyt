@@ -1,7 +1,8 @@
+import { AppCollConfig } from '../lib/commons/types'
 import { RECIPES } from '../routes/recipe/fixtures'
 import { CATEGORIES } from '../routes/category/fixtures'
 
-export default {
+const storeConfig: AppCollConfig = {
     categories: {
         data: CATEGORIES,
         unique: 'type'
@@ -10,3 +11,5 @@ export default {
         data: RECIPES
     },
 }
+
+export default storeConfig

@@ -1,6 +1,7 @@
 import StormDB from 'stormdb'
+import { IHasIdentity } from '../../lib/commons/types'
 import { StoreItemNotFoundError, StoreItemConflictError } from './store-error'
-import { IHasIdentity, IRepository, StoreServiceOptions} from './types'
+import { IRepository, StoreServiceOptions} from './types'
 
 export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     private _db: StormDB | undefined
@@ -12,7 +13,7 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
 
     constructor(options: StoreServiceOptions<T>) {
         this._db = options.db && options.db
-        this._coll = options.coll ? options.coll : 'collection'
+        this._coll = options.coll ? String(options.coll) : 'collection'
         this._data = this._db && this._db.get(this._coll).value().length ? this._db.get(this._coll).value() : options.data?.length ? options.data: []
         this._unique = options.unique ? options.unique : false
         this._currId = this._data.length ? this._data[this._data.length - 1].id : 0
