@@ -1,7 +1,5 @@
 import { FastifyInstance } from 'fastify'
 import createError from 'http-errors'
-import StormDB from 'stormdb'
-import { StoreService } from '../../lib/store'
 import {
     getAllCategoriesSchema,
     getCategorySchema,
@@ -15,8 +13,6 @@ import {
     CategoryCreateBody,
     CategoryUpdateBody,
 } from './types'
-import { CATEGORIES } from './fixtures'
-
 
 /**
  *

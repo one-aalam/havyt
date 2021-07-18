@@ -3,6 +3,8 @@ import Fastify, { FastifyInstance } from 'fastify'
 import envConfig from './config/env'
 import storeConfig from './config/store'
 import swaggerConfig from './config/swagger'
+import upConfig from './config/up'
+import corsConfig from './config/cors'
 
 export const buildServer = (): FastifyInstance => {
     // Instantiate the Fastify server
@@ -12,12 +14,15 @@ export const buildServer = (): FastifyInstance => {
         }
     })
 
+    fastify.register(import('./plugins/env'), envConfig)
+
     fastify.register(import('fastify-compress'))
     fastify.register(import('fastify-swagger'), swaggerConfig)
+    fastify.register(import('under-pressure'), upConfig)
+    fastify.register(import('fastify-cors'), corsConfig)
 
     // fastify.register(import('./plugins/logan'))
     // Register custom App plugins
-    fastify.register(import('./plugins/env'), envConfig)
     fastify.register(import('./plugins/store'), storeConfig)
     fastify.register(import('./plugins/grace'))
 
