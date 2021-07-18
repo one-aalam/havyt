@@ -16,15 +16,10 @@ import {
     RecipeCreateBody,
     RecipeUpdateBody
 } from './types'
-import { RECIPES } from './fixtures'
 
 export default async function recipes(fastify: FastifyInstance) {
 
-    const recipeService = new StoreService<Recipe>({
-        coll: 'recipes',
-        db: new StormDB(new StormDB.localFileEngine(process.env?.APP_FILE_DB || 'db/havyt.stormdb' )),
-        data: RECIPES,
-    })
+    const recipeService = fastify.getStore<Recipe>('recipes')
 
     fastify.get<{
         Querystring: RecipeQuerystring

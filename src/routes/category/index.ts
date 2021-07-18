@@ -25,12 +25,7 @@ import { CATEGORIES } from './fixtures'
 
 export default async function categories(fastify: FastifyInstance) {
 
-    const categoryService = new StoreService<Category>({
-        coll: 'categories',
-        db: new StormDB(new StormDB.localFileEngine(process.env?.APP_FILE_DB || 'db/havyt.stormdb' )),
-        data: CATEGORIES,
-        unique: 'type'
-    })
+    const categoryService = fastify.getStore<Category>('categories')
 
     // get all the categories
     fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => categoryService.getAll())

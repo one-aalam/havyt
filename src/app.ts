@@ -1,11 +1,13 @@
 // Server-app, not the Server!
 import Fastify, { FastifyInstance } from 'fastify'
+import storeConfig from './config/store'
 
 export const buildServer = (): FastifyInstance => {
     // Instantiate the Fastify server
     const fastify = Fastify()
 
-    fastify.register(import('./db'))
+    fastify.register(import('./plugins/logan'))
+    fastify.register(import('./plugins/store'), storeConfig)
     // Load and register route files
     fastify.register(import('./routes/user'))
     fastify.register(import('./routes/recipe'))
