@@ -4,9 +4,13 @@ import storeConfig from './config/store'
 
 export const buildServer = (): FastifyInstance => {
     // Instantiate the Fastify server
-    const fastify = Fastify()
+    const fastify = Fastify({
+        logger: {
+            prettyPrint: process.env.NODE_ENV !== 'production'
+        }
+    })
 
-    fastify.register(import('./plugins/logan'))
+    // fastify.register(import('./plugins/logan'))
     fastify.register(import('./plugins/store'), storeConfig)
     // Load and register route files
     fastify.register(import('./routes/user'))
