@@ -19,6 +19,7 @@ export const buildServer = (): FastifyInstance => {
     // Register custom App plugins
     fastify.register(import('./plugins/env'), envConfig)
     fastify.register(import('./plugins/store'), storeConfig)
+    fastify.register(import('./plugins/grace'))
 
     // Load and register API route files
     fastify.register(import('./routes/user'))
