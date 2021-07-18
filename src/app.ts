@@ -11,8 +11,11 @@ export const buildServer = (): FastifyInstance => {
         }
     })
 
+    fastify.register(import('fastify-compress'))
+
     // fastify.register(import('./plugins/logan'))
     fastify.register(import('./plugins/env'), envConfig)
+
     fastify.register(import('./plugins/store'), storeConfig)
     // Load and register route files
     fastify.register(import('./routes/user'))
