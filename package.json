@@ -39,6 +39,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "fastify": "^3.19.0",
+    "fastify-env": "^2.1.1",
     "fastify-plugin": "^3.0.0",
     "http-errors": "^1.8.0",
     "pino-pretty": "^5.1.1",

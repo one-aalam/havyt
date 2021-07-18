@@ -16,7 +16,7 @@ export type CollConfig = {
 
 
  const store = async (fastify: FastifyInstance, config: CollConfig) => {
-    const db = new StormDB(new StormDB.localFileEngine(process.env?.APP_FILE_DB || 'db/havyt.stormdb' ))
+    const db = new StormDB(new StormDB.localFileEngine(fastify.config.APP_FILE_DB))
     const dbPopulated = Object.keys(config).filter(coll => db.get(coll).value()).length
 
     if(!dbPopulated) {
@@ -39,6 +39,7 @@ export type CollConfig = {
                 unique: options?.unique ? options?.unique : config[coll]?.unique ? config[coll]?.unique : false
         })
     })
+
 }
 
 export default fp(store)

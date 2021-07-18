@@ -3,7 +3,7 @@ import http from 'http'
 
 import { StoreService } from '../../lib/store'
 import { IHasIdentity } from '../../lib/store/types'
-import { AppColl } from '../../lib/commons/types'
+import { AppColl, EnvConfig } from '../../lib/commons/types'
 
 declare module "fastify" {
 // @ts-ignore
@@ -12,6 +12,9 @@ declare module "fastify" {
     HttpRequest = http.IncomingMessage,
     HttpResponse = http.ServerResponse
   > {
+
+    config: EnvConfig
+
     lo(req: FastifyRequest): void
 
     getStore<T extends IHasIdentity>(coll: AppColl, options?: {
