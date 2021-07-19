@@ -1,5 +1,6 @@
 // Server-app, not the Server!
 import Fastify, { FastifyInstance } from 'fastify'
+import path from 'path'
 import envConfig from './config/env'
 import storeConfig from './config/store'
 import swaggerConfig from './config/swagger'
@@ -7,6 +8,7 @@ import upConfig from './config/up'
 import corsConfig from './config/cors'
 
 export const buildServer = (): FastifyInstance => {
+  const ROOT_DIR = path.join(__dirname, '..')
   // Instantiate the Fastify server
   const fastify = Fastify({
     logger: {
@@ -20,6 +22,7 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('fastify-swagger'), swaggerConfig)
   fastify.register(import('under-pressure'), upConfig)
   fastify.register(import('fastify-cors'), corsConfig)
+  fastify.register(import('fastify-favicon'))
 
   // fastify.register(import('./plugins/logan'))
   // Register custom App plugins
@@ -32,11 +35,9 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('./routes/category'))
   fastify.register(import('./routes/auth'))
 
-  fastify.get(
-    '*',
-    async (req) =>
-      `You requested for ${req.url} using method ${req.method}, which does not have an associated response`
-  )
+  fastify.register(import('fastify-static'), {
+    root: path.join(ROOT_DIR, 'public'),
+  })
 
   // return the Server instance
   return fastify

@@ -1671,12 +1671,19 @@ fastify-error@^0.3.0:
   resolved "https://registry.yarnpkg.com/fastify-error/-/fastify-error-0.3.1.tgz#8eb993e15e3cf57f0357fc452af9290f1c1278d2"
   integrity sha512-oCfpcsDndgnDVgiI7bwFKAun2dO+4h84vBlkWsWnz/OUK9Reff5UFoFl241xTiLeHWX/vU9zkDVXqYUxjOwHcQ==
 
+fastify-favicon@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fastify-favicon/-/fastify-favicon-3.1.0.tgz#d1a30d5f09800dcec7ea2c6bbbc487c05d4f1766"
+  integrity sha512-5olT5wGPuN+FgUmEKjtqKpmrO8JOr88O3CyaQXUXuEIiEsxkw9nh1U2nVw4WzmggcOOxLvoK6Yrc3yXC2hH8Gg==
+  dependencies:
+    fastify-plugin "^3.0.0"
+
 fastify-plugin@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-3.0.0.tgz#cf1b8c8098e3b5a7c8c30e6aeb06903370c054ca"
   integrity sha512-ZdCvKEEd92DNLps5n0v231Bha8bkz1DjnPP/aEz37rz/q42Z5JVLmgnqR4DYuNn3NXAO3IDCPyRvgvxtJ4Ym4w==
 
-fastify-static@^4.0.0:
+fastify-static@^4.0.0, fastify-static@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/fastify-static/-/fastify-static-4.2.2.tgz#48bd75bf23f2fb983395ce992a92448d78fe88bb"
   integrity sha512-C631EuGdMlUzFXuuP4SqXBoQEiit9S0uYRd97cF2mFhgStvZvQKIjtzUk/GMQu6EfEdm0ddj3UAc0C6dVeNyKA==
