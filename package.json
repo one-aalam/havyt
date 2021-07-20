@@ -13,7 +13,7 @@
     "lint:fix": "eslint src/** --fix",
     "test": "tap --ts --reporter=list",
     "test:watch": "tap --ts --reporter=list --watch",
-    "postbuild": "copyfiles -u 1 src/**/*.html dist/"
+    "postbuild": "copyfiles -u 1 src/**/*.{html,pug} dist/"
   },
   "repository": "https://github.com/one-aalam/havyt",
   "author": "Aftab Alam",
