@@ -2,14 +2,17 @@ doctype html
 html(lang="en")
     include layout/head
     body
-        form(class="form")
+        form(class="form", method="post", action="/auth")
+            if errors
+                ul
+                    each error in errors
+                        li #{error.dataPath.replace('.','')} #{error.message}
             fieldset
                 legend Sign In
                 div(class="field-group")
                     label(for="email") Email
-                    input(type="email", class="input", id="email", placeholder="email")
-                    small(class="field-message") This is a required field
+                    input(type="email", class="input", id="email", name="email", placeholder="email")
                 div(class="field-group")
                     label(for="password") Password
-                    input(type="password", class="input", id="password", placeholder="Password")
+                    input(type="password", class="input", id="password", name="password", placeholder="Password")
                 button(type="submit", class="button") Sign In
