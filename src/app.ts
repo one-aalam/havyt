@@ -37,12 +37,9 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('./routes/category'), { prefix: '/api' })
   fastify.register(import('./routes/auth'), { prefix: '/api' })
 
-  fastify.register(import('fastify-static'), {
-    root: path.join(ROOT_DIR, 'public'),
-    prefix: '/public/',
+  fastify.register(import('./routes/web-app'), {
+      rootDir: ROOT_DIR
   })
-
-  fastify.register(import('./routes/web-app'))
 
   // return the Server instance
   return fastify

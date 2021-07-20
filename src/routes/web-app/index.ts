@@ -1,16 +1,16 @@
 import { FastifyInstance } from 'fastify'
 import path from 'path'
-import {
-    Recipe,
-    RecipeQuerystring,
-} from '../recipe/types'
-import {
-    authSchema
-} from '../auth/schemas'
 
-export default async function routes(fastify: FastifyInstance) {
-    const recipeService = fastify.getStore<Recipe>('recipes')
+type WebAppOptions = {
+    rootDir: string
+}
 
+export default async function routes(fastify: FastifyInstance, options: WebAppOptions) {
+
+    fastify.register(import('fastify-static'), {
+        root: path.join(options.rootDir, 'public'),
+        prefix: '/public/',
+    })
 
     fastify.register(import('point-of-view'), {
         engine: {
@@ -26,35 +26,7 @@ export default async function routes(fastify: FastifyInstance) {
         }
     })
 
-  fastify.get<{
-      Querystring: RecipeQuerystring
-  }>('/', async (req, reply) => {
-    const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
-    const recipes = await recipeService.getAll()
-    const recipesTplData = recipes
-      .filter((recipe) => !tag || recipe.tags?.map((tag) => tag.toLowerCase()).includes(tag))
-      .filter((recipe) => !cuisineId || recipe.cuisineId == cuisineId)
-      .filter((recipe) => !courseId || recipe.courseId == courseId)
-      .slice(offset, offset + limit)
+    fastify.register(import('./routes/auth'))
+    fastify.register(import('./routes/recipe'))
 
-    await reply.view('index', {
-        recipes: recipesTplData
-    })
-  })
-
-  fastify.get('/auth', async (req, reply) => await reply.view('auth'))
-
-
-  fastify.post('/auth', { schema: {
-      body: authSchema
-  },
-    attachValidation: true
-}, async (req, reply) => {
-    if(req.validationError) {
-        await reply.view('auth', {
-            errors: req.validationError.validation
-        })
-    }
-    await reply.redirect('/')
-  })
 }

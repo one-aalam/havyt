@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+    include ../layout/head
+    body
+        form(class="form", method="post", action="/recipes")
+        #{JSON.stringify(recipe)}
+            fieldset
+                legend Edit Recipe
+                    for field in fields
+                        div(class="field-group")
+                            label(for=`${field.key}`) #{field.label}
+                            if field.type == 'textarea'
+                                textarea(class="input", id=`${field.key}`, name=`${field.key}`, placeholder=`${field.label}`, value=`${field.value}` required=`${field.required}`, rows=3)
+                            else
+                                input(type=`${field.type}`, class="input", id=`${field.key}`, name=`${field.key}`, placeholder=`${field.label}`, value=`${field.value}` required=`${field.required}`)
+            button(type="submit", class="button") Update Recipe

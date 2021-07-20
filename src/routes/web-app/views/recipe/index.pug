@@ -1,0 +1,10 @@
+doctype html
+html(lang="en")
+    include ../layout/head
+    body
+        h2 Havyt
+        div(id="app")
+            ul
+                each recipe in recipes
+                    li
+                        a(href=`/recipes/${recipe.id}`, title="View #{recipe.name}") #{recipe.name}
