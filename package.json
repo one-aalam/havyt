@@ -23,6 +23,7 @@
     "@types/http-errors": "^1.8.1",
     "@types/node": "^16.3.1",
     "@types/pino-pretty": "^4.7.1",
+    "@types/pug": "^2.0.5",
     "@types/tap": "^15.0.5",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
@@ -51,6 +52,8 @@
     "fastify-swagger": "^4.8.3",
     "http-errors": "^1.8.0",
     "pino-pretty": "^5.1.1",
+    "point-of-view": "^4.15.1",
+    "pug": "^3.0.2",
     "stormdb": "^0.5.1",
     "under-pressure": "^5.7.0"
   },
