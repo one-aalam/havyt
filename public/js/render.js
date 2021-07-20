@@ -1,8 +1,7 @@
 export function render(elm) {
-    if (elm) elm.innerHTML = `<h2>Havyt</h2>`
     loading()
 
-    fetch('/recipes').then(res => res.json()).then(recipes => {
+    fetch('/api/recipes').then(res => res.json()).then(recipes => {
         loading()
         if (recipes.length) {
             const recipeList = document.createElement('ul')
@@ -10,6 +9,7 @@ export function render(elm) {
             recipes.forEach(recipe => {
                 const recipeListItem = document.createElement('li')
                 recipeListItem.innerHTML = `${recipe.name}`
+                recipeListItem.classList = 'recipe-card'
                 recipeList.append(recipeListItem)
             })
             elm.append(recipeList)

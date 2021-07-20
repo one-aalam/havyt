@@ -30,14 +30,17 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('./plugins/grace'))
 
   // Load and register API route files
-  fastify.register(import('./routes/user'))
-  fastify.register(import('./routes/recipe'))
-  fastify.register(import('./routes/category'))
-  fastify.register(import('./routes/auth'))
+  fastify.register(import('./routes/user'), { prefix: '/api' })
+  fastify.register(import('./routes/recipe'), { prefix: '/api' })
+  fastify.register(import('./routes/category'), { prefix: '/api' })
+  fastify.register(import('./routes/auth'), { prefix: '/api' })
 
   fastify.register(import('fastify-static'), {
     root: path.join(ROOT_DIR, 'public'),
+    prefix: '/public/',
   })
+
+  fastify.register(import('./routes/web-app'))
 
   // return the Server instance
   return fastify
