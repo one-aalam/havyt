@@ -1,21 +1,15 @@
 doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
-        link(rel="icon", href="/favicon.ico", type="image/x-icon")
-        meta(http-equiv="X-UA-Compatible", content="IE=edge")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Havyt - Fast APIs with Fastify
-        meta(name="description", content="Fast APIs with Fastify")
-        meta(name="msapplication-TileColor", content="#ffffff")
-        meta(name="theme-color", content="#ffffff")
-        link(rel="stylesheet", href="/public/css/index.css")
+    include /layout/head
     body
         h2 Havyt
         blockquote(class="promo")
-            p
-                a(href="/auth", class="button"  title="log in...") Log-in
-                and add new recipes, or like the existing ones
-            div(id="app")
-                script(src="/public/js/app.js", type="module")
+        p
+            a(href="/auth", class="button"  title="log in...") Log-in
+            and add new recipes, or like the existing ones
+        div(id="app")
+            ul
+                each recipe in recipes
+                    li= recipe.name
+        //- no CSR, it ain't fast for me
+        //- script(src="/public/js/app.js", type="module")
