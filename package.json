@@ -12,7 +12,8 @@
     "format": "prettier --write ./src",
     "lint:fix": "eslint src/** --fix",
     "test": "tap --ts --reporter=list",
-    "test:watch": "tap --ts --reporter=list --watch"
+    "test:watch": "tap --ts --reporter=list --watch",
+    "postbuild": "copyfiles -u 1 src/**/*.html dist/"
   },
   "repository": "https://github.com/one-aalam/havyt",
   "author": "Aftab Alam",
@@ -25,6 +26,7 @@
     "@types/tap": "^15.0.5",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
+    "copyfiles": "^2.4.1",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
