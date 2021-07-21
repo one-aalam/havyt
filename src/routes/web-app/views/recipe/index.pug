@@ -1,10 +1,11 @@
-doctype html
-html(lang="en")
-    include ../layout/head
-    body
-        h2 Havyt
-        div(id="app")
-            ul
-                each recipe in recipes
-                    li
-                        a(href=`/recipes/${recipe.id}`, title="View #{recipe.name}") #{recipe.name}
+extends ../layout/base
+block content
+    div(id="app")
+        ul
+            each recipe in recipes
+                li
+                    a(href=`/recipes/${recipe.id}`, title="View #{recipe.name}") #{recipe.name}
+                    |
+                    |
+                    a(href=`/recipes/${recipe.id}/edit`, title="Update #{recipe.name}") (update)
+        a(href=`/recipes/add`, title="Add Recipe") Add a new recipe

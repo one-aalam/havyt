@@ -23,8 +23,6 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('under-pressure'), upConfig)
   fastify.register(import('fastify-cors'), corsConfig)
   fastify.register(import('fastify-favicon'))
-  fastify.register(import('fastify-formbody'))
-
 
   // fastify.register(import('./plugins/logan'))
   // Register custom App plugins

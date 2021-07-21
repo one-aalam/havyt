@@ -1,16 +1,48 @@
-doctype html
-html(lang="en")
-    include ../layout/head
-    body
-        form(class="form", method="post", action="/recipes")
-        #{JSON.stringify(recipe)}
-            fieldset
-                legend Edit Recipe
-                    for field in fields
-                        div(class="field-group")
-                            label(for=`${field.key}`) #{field.label}
-                            if field.type == 'textarea'
-                                textarea(class="input", id=`${field.key}`, name=`${field.key}`, placeholder=`${field.label}`, value=`${field.value}` required=`${field.required}`, rows=3)
-                            else
-                                input(type=`${field.type}`, class="input", id=`${field.key}`, name=`${field.key}`, placeholder=`${field.label}`, value=`${field.value}` required=`${field.required}`)
-            button(type="submit", class="button") Update Recipe
+extends ../layout/base
+block content
+    form(class="form centered", method="post", action="/recipes")
+        fieldset
+            legend(align="center") #{id? 'Update' : 'Add' } Recipe
+            for field in fields
+                div(class="h-field-group")
+                    if id
+                        input(type="hidden", name="id", value=id)
+                    label(for=field.key) #{field.label}#{field.required ? '*' : ''}
+                    if field.fieldType == 'textarea'
+                        textarea(
+                            class="h-input h-textarea",
+                            id=field.key,
+                            name=field.key,
+                            placeholder=field.label,
+                            required=(field.required),
+                            rows=1
+                        ) #{field.value}
+                    else if field.fieldType == 'select'
+                        select(
+                            class="h-input h-select",
+                            id=field.key,
+                            name=field.key,
+                            placeholder=field.label,
+                            required=(field.required)
+                        )
+                            for option in field.options
+                                option(value=option.id, selected=(option.id === field.value)) #{option.name}
+                    else if field.fieldType == 'file'
+                        input(
+                            type="file",
+                            class="h-input h-file",
+                            id=field.key,
+                            name=field.key,
+                            placeholder=field.label,
+                        )
+                    else
+                        input(
+                            type=field.fieldType,
+                            class="h-input h-text",
+                            id=field.key,
+                            name=field.key,
+                            placeholder=field.label,
+                            value=field.value
+                            required=(field.required)
+                        )
+            button(type="submit", class="h-btn centered") #{id? 'Update' : 'Add' } Recipe

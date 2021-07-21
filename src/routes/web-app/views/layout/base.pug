@@ -1,0 +1,10 @@
+html
+  head
+    include head
+  body(class="container")
+    header(class="header")
+        h1(class="centered") Havyt
+    div(class="content")
+        block content
+    block scripts
+      script(src="/public/js/app.js", type="module")

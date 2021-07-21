@@ -24,19 +24,20 @@ export function capitalize(word: string) {
     return word.charAt(0).toUpperCase() + word.substring(1);
 }
 
-export function getPropsForTemplate(schema: any, val: any) {
+export function getPropsForTemplate(schema: any, val: any, options: any) {
     let props = []
     for (const prop in schema.properties) {
+        const propSchema = schema.properties[prop]
+        const fieldType = propSchema.type === 'number' ? 'number' : propSchema.type === 'array' ? 'textarea' : 'text'
         props.push(
             {
                 key: prop,
-                ...schema.properties[prop],
-                value: val[prop],
-                fieldType: schema.properties[prop].type === 'number' ? 'number' :
-                            schema.properties[prop].type === 'array' ? 'textarea' :
-                            'text',
+                ...propSchema,
+                value: val[prop] && propSchema.type === 'array' ? val[prop].join('\n') : val[prop] ? val[prop] : '',
+                fieldType: options[prop] && Array.isArray(options[prop].values) ? 'select' : options[prop] && options[prop].renderAs ? options[prop].renderAs : fieldType,
                 required: schema.required.includes(prop),
-                label: toCapitalizedWords(prop)
+                label: toCapitalizedWords(prop),
+                ...(options[prop] && options[prop].values ? { options: options[prop].values } : null),
             }
         )
     }

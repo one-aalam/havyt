@@ -409,3 +409,97 @@ export const RECIPES: Recipe[] = [
     tags: ['pizza', 'main', 'vegetarian'],
   },
 ]
+
+export const CUISINES = [
+    {
+        id: 1,
+        name: 'American'
+    },
+    {
+        id: 2,
+        name: 'Italian'
+    },
+    {
+        id: 3,
+        name: 'Asian'
+    },
+    {
+        id: 4,
+        name: 'Mexican'
+    },
+    {
+        id: 5,
+        name: 'Southern & Soul Food'
+    },
+    {
+        id: 6,
+        name: 'French'
+    },
+    {
+        id: 7,
+        name: 'Barbecue'
+    },
+    {
+        id: 8,
+        name: 'Indian'
+    },
+    {
+        id: 9,
+        name: 'Chinese'
+    },
+    {
+        id: 10,
+        name: 'Mediterranean'
+    },
+    {
+        id: 11,
+        name: 'Greek'
+    },
+    {
+        id: 12,
+        name: 'English'
+    },
+    {
+        id: 13,
+        name: 'Spanish'
+    }
+]
+
+export const COURSES = [
+    {
+        id: 1,
+        name: 'Appetizers'
+    },
+    {
+        id: 2,
+        name: 'Breakfast'
+    },
+    {
+        id: 3,
+        name: 'Brunch'
+    },
+    {
+        id: 4,
+        name: 'Kid-Friendly'
+    },
+    {
+        id: 5,
+        name: 'Dessert'
+    },
+    {
+        id: 6,
+        name: 'Dinner'
+    },
+    {
+        id: 7,
+        name: 'Lunch'
+    },
+    {
+        id: 8,
+        name: 'Main Dish'
+    },
+    {
+        id: 9,
+        name: 'Salad'
+    }
+]

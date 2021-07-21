@@ -1,26 +1,33 @@
-doctype html
-html(lang="en")
-    include ../layout/head
-    body
-        if recipe
-            h1 #{recipe.name}
+extends ../layout/base
+block content
+    if recipe
+        h1 #{recipe.name}
+        if recipe.desc
+            p #{recipe.desc}
+        div(class="meta")
+            if recipe.prepTime
+                strong Prep Time: #{recipe.prepTime}
+            |
+            |
             if recipe.cookingTime
-                Cooking Time #{recipe.cookingTime}
+                strong Cooking Time: #{recipe.cookingTime}
+            |
+            |
             if recipe.serves
-                strong
-                    Serves #{recipe.serves}
-            h3 Ingredients
-            if recipe.ingredients
-                ul
-                    for ingredient in recipe.ingredients
-                        li= ingredient
-            h3 Directions
-            if recipe.directions
-                ul
-                    for direction in recipe.directions
-                        li= direction
-            if recipe.tags
-                    for tag in recipe.tags
-                        a(href="", title="View recipe for #{tag}") #{tag}
-                        |
-                        |
+                strong Serves: #{recipe.serves}
+        h3 Ingredients
+        if recipe.ingredients
+            ul
+                for ingredient in recipe.ingredients
+                    li= ingredient
+        h3 Directions
+        if recipe.directions
+            ul
+                for direction in recipe.directions
+                    li= direction
+        if recipe.tags
+                for tag in recipe.tags
+                    a(href="", title="View recipe for #{tag}") #{tag}
+                    |
+                    |
+        a(href=`/recipes/${recipe.id}/edit`, title="Update #{recipe.name}") (update)

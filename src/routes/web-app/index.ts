@@ -6,6 +6,7 @@ type WebAppOptions = {
 }
 
 export default async function routes(fastify: FastifyInstance, options: WebAppOptions) {
+    fastify.register(import('fastify-formbody'))
 
     fastify.register(import('fastify-static'), {
         root: path.join(options.rootDir, 'public'),
