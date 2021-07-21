@@ -4,6 +4,284 @@ html {
 *, *:before, *:after {
     box-sizing: inherit;
 }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
 }
+
+/* Remove default margin */
+body,h1,h2,h3,h4,p,ul[class],ol[class],li,figure,figcaption,blockquote,dl,dd {
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Natural flow and rhythm in articles by default */
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,button,textarea,select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* alef-regular - latin */
+@font-face {
+    font-family: 'Alef';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/alef-v12-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/alef-v12-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/alef-v12-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/alef-v12-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/alef-v12-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/alef-v12-latin-regular.svg#Alef') format('svg'); /* Legacy iOS */
+  }
+  /* alef-700 - latin */
+  @font-face {
+    font-family: 'Alef';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/alef-v12-latin-700.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/alef-v12-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/alef-v12-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/alef-v12-latin-700.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/alef-v12-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/alef-v12-latin-700.svg#Alef') format('svg'); /* Legacy iOS */
+}
+body {
+    font-family: Alef, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+    --color-surface: #f5f2f7;
+    --color-on-surface: #29344b;
+
+    --input-border: #cee2fc;
+    --input-focus-h: 245;
+    --input-focus-s: 100%;
+    --input-focus-l: 42%;
+    --input-inner-padding: 0.4rem 0.6rem;
+
+    --b-dashed: 1px dashed;
+    --b-solid: 1px solid;
+
+    --radius-default: .15em;
+}
+
+.container {
+    margin: 0 auto;
+    width: 80%;
+}
+.content {
+    margin: 1rem 0;
+}
+
+.centered {
+    display: grid;
+    place-content: center;
+}
+
+ul.grid {
+    list-style: none;
+}
+
+.grid {
+    --min: 45ch;
+    --gap: 1rem;
+
+    display: grid;
+    grid-gap: var(--gap);
+    /* min() with 100% prevents overflow in extra narrow spaces */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
+}
+
+.header {
+    background:lightcyan;
+}
+
+.h-field-group {
+    margin-bottom: 1rem;
+}
+
+.h-field-group > * {
+    padding-bottom: .2rem;
+}
+
+.h-field-group > label, small {
+    display: block;
+}
+
+.h-field-group > label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+/* Input Styles */
+.h-input {
+    font-size: 1em;
+    font-size: max(16px, 1em);
+    font-family: inherit;
+    padding: var(--input-inner-padding);
+    background-color: #fff;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    transition: 180ms box-shadow ease-in-out;
+    box-shadow: rgb(223, 222, 222) 0px 0px 3px 1px inset;
+  }
+
+  .h-input:focus {
+    border-color: hsl(
+      var(--input-focus-h),
+      var(--input-focus-s),
+      var(--input-focus-l)
+    );
+    box-shadow: 0 0 0 3px
+      hsla(
+        var(--input-focus-h),
+        var(--input-focus-s),
+        calc(var(--input-focus-l) + 40%),
+        0.8
+      );
+    outline: 3px solid transparent;
+  }
+
+  .h-input:not(textarea) {
+    line-height: 1;
+    height: 2.25rem;
+  }
+
+  .h-input[type="file"] {
+    font-size: 0.9em;
+    padding-top: 0.35rem;
+  }
+
+  .h-input[readonly] {
+    border-style: dotted;
+    cursor: not-allowed;
+    color: #777;
+  }
+
+  .h-input[disabled] {
+    --input-border: #ccc;
+
+    background-color: #eee;
+    cursor: not-allowed;
+  }
+
+  .h-textarea {
+    min-height: 1.2rem;
+    resize: vertical;
+  }
+
+/* Form styling ends here */
+
+/* Button styles */
+.h-btn {
+    /* Display */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: start;
+
+    /* Visual */
+    /* background-color: var(--color-yellow);
+    color: var(--color-on-yellow); */
+    background: linear-gradient(
+        90deg,
+        #732fdf,
+        #bd00ff
+    );
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+
+    /* Size */
+    padding: 0.25em 0.75em;
+    min-width: 10ch;
+    min-height: 44px;
+
+    /* Text */
+    text-align: center;
+    line-height: 1.1;
+
+    transition: 220ms all ease-in-out;
+}
+
+.h-btn:hover,
+.h-btn:active {
+      background-color: var(--color-yellow);
+    }
+
+.h-btn:focus {
+    outline-style: solid;
+    outline-color: transparent;
+    box-shadow: 0 0 0 4px var(--color-yellow);
+}
+
+.h-btn--small {
+    font-size: 1.15rem;
+}
+
+.h-btn--block {
+    width: 100%;
+}
+
+fieldset {
+    width: 50vw;
+    border: 0;
+    padding: 1rem 2rem;
+}
+legend {
+    font-size: 1.5rem;
+    background-color: var(--color-surface);
+    padding: 0.2rem 1rem;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+}
+
+.h-input {
+    width: 100%;
+}
+
+/* button end*/
