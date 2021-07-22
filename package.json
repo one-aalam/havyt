@@ -19,6 +19,7 @@
   "author": "Aftab Alam",
   "license": "MIT",
   "devDependencies": {
+    "@types/busboy": "^0.2.4",
     "@types/fastify-cors": "^2.1.0",
     "@types/http-errors": "^1.8.1",
     "@types/node": "^16.3.1",
@@ -48,6 +49,7 @@
     "fastify-env": "^2.1.1",
     "fastify-favicon": "^3.1.0",
     "fastify-formbody": "^5.0.0",
+    "fastify-multipart": "^4.0.7",
     "fastify-plugin": "^3.0.0",
     "fastify-static": "^4.2.2",
     "fastify-swagger": "^4.8.3",

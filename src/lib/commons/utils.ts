@@ -43,3 +43,7 @@ export function getPropsForTemplate(schema: any, val: any, options: any) {
     }
     return props
 }
+
+export function toArray(src: string) {
+    return src && src.indexOf('\n') !== -1 ? src.split('\n') : [ src ]
+}
