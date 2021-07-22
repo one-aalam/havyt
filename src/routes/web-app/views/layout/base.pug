@@ -2,8 +2,9 @@ html
   head
     include head
   body(class="container")
-    header(class="header")
-        h1(class="centered") Havyt
+    header(class="header centered")
+        a(href="/", title="Go to home")
+            img(src="/public/logo.png", alt="Havyt - Good Food. Good Mood.", style="height: 100px;")
     div(class="content")
         block content
     block scripts

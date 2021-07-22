@@ -2,6 +2,8 @@ extends ../layout/base
 block content
     if recipe
         h1 #{recipe.name}
+        if recipe.imageUrl
+            img(src=(recipe.imageUrl.indexOf('//') !== -1 ? recipe.imageUrl : `${uploadsDir}/${recipe.imageUrl}`), alt=`${recipe.name} image`)
         if recipe.desc
             p #{recipe.desc}
         div(class="meta")
@@ -27,7 +29,7 @@ block content
                     li= direction
         if recipe.tags
                 for tag in recipe.tags
-                    a(href="", title="View recipe for #{tag}") #{tag}
+                    a(href=`/recipes?tag=${tag}`, title=`View recipe for ${tag}`) #{tag}
                     |
                     |
         a(href=`/recipes/${recipe.id}/edit`, title="Update #{recipe.name}") (update)

@@ -1,6 +1,7 @@
 extends ../layout/base
 block content
     div(id="app")
+        a(href=`/recipes/add`, title="Add Recipe") Add a new recipe
         ul
             each recipe in recipes
                 li
@@ -8,4 +9,3 @@ block content
                     |
                     |
                     a(href=`/recipes/${recipe.id}/edit`, title="Update #{recipe.name}") (update)
-        a(href=`/recipes/add`, title="Add Recipe") Add a new recipe

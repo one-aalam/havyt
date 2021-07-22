@@ -1,13 +1,16 @@
 extends ../layout/base
 block content
-    form(class="form centered", method="post", action="/recipes")
+    if messages && messages.length
+        each message in messages
+            p #{message}
+    form(class="form centered", method="post", action="/recipes", enctype="multipart/form-data")
         fieldset
-            legend(align="center") #{id? 'Update' : 'Add' } Recipe
+            legend(align="center") #{ id? 'Update' : 'Add' } Recipe
+            if id
+                input(type="hidden", name="id", value=id)
             for field in fields
                 div(class="h-field-group")
-                    if id
-                        input(type="hidden", name="id", value=id)
-                    label(for=field.key) #{field.label}#{field.required ? '*' : ''}
+                    label(for=field.key, style="cursor: pointer;") #{field.label}#{field.required ? '*' : ''}
                     if field.fieldType == 'textarea'
                         textarea(
                             class="h-input h-textarea",
@@ -34,7 +37,14 @@ block content
                             id=field.key,
                             name=field.key,
                             placeholder=field.label,
+                            accept="image/*"
+                            style="display:none;"
                         )
+                        if field.value
+                            img(src=(field.value.indexOf('//') !== -1 ? field.value : `${uploadsDir}/${field.value}`), id=`${field.key}Img`, alt=`${field.value} image`)
+                        else
+                            img(src="/public/havyt-img.png", id=`${field.key}Img`, alt=`default image`, style="height: 100px;")
+                        small(id=`${field.key}Name`) #{field.value || `(upload an image, by clicking on the image above - max ${uploadSize})`}
                     else
                         input(
                             type=field.fieldType,
@@ -45,4 +55,4 @@ block content
                             value=field.value
                             required=(field.required)
                         )
-            button(type="submit", class="h-btn centered") #{id? 'Update' : 'Add' } Recipe
+            button(type="submit", class="h-btn centered") #{ id? 'Update' : 'Add' } Recipe
