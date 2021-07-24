@@ -11,7 +11,7 @@ export const categoryCreateSchema = {
     name: { type: 'string' },
     desc: { type: 'string' },
   },
-  required: ['type'],
+  required: ['type', 'name'],
   additionalProperties: false,
 } as const
 
@@ -89,3 +89,36 @@ export const deleteCategorySchema = {
     '4xx': errorSchema,
   },
 }
+
+
+export const categoryItemSchema = {
+    $id: 'categoryItemSchema',
+    type: 'object',
+    properties: {
+        id: { type: 'number' },
+        categoryId: { type: 'number' },
+      name: { type: 'string' },
+      desc: { type: 'string' },
+    },
+    required: ['id', 'categoryId', 'name'],
+    additionalProperties: false,
+} as const
+
+
+export const getAllCategoryItemsSchema = {
+    response: {
+      200: {
+        type: 'array',
+        items: categoryItemSchema,
+      },
+      '4xx': errorSchema,
+    },
+}
+
+export const getCategoryItemSchema = {
+    params: categoryParamsSchema,
+    response: {
+      '2xx': categoryItemSchema,
+      '4xx': errorSchema,
+    },
+  }

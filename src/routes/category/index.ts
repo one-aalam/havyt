@@ -6,28 +6,48 @@ import {
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
+  getAllCategoryItemsSchema,
+  getCategoryItemSchema
 } from './schemas'
 import { Category, CategoryParams, CategoryCreateBody, CategoryUpdateBody } from './types'
-
+import { CategoryService } from './service'
 /**
  *
  * @param fastify
  */
 
 export default async function categories(fastify: FastifyInstance) {
-  const categoryService = fastify.getStore<Category>('categories')
+  const categoryService = new CategoryService(fastify.getStore<Category>('categories'))
 
   // get all the categories
-  fastify.get('/categories', { schema: getAllCategoriesSchema }, async () =>
-    categoryService.getAll()
-  )
+  fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => await categoryService.getAll())
 
   // get the category by provided id
   fastify.get<{
     Params: CategoryParams
   }>('/categories/:id', { schema: getCategorySchema }, async (req) => {
     try {
-      return await categoryService.getById(req.params.id)
+      return await categoryService.getOne(req.params)
+    } catch (e) {
+      return createError(e.code)
+    }
+  })
+
+  fastify.get<{
+    Params: CategoryParams
+  }>('/categories/:id/items', { schema: getAllCategoryItemsSchema }, async (req) => {
+    try {
+      return await categoryService.getAllItemsByCategory(req.params)
+    } catch (e) {
+      return createError(e.code)
+    }
+  })
+
+  fastify.get<{
+    Params: CategoryParams
+  }>('/categories/items/:id', { schema: getCategoryItemSchema }, async (req) => {
+    try {
+      return await categoryService.getItemByCategoryItemId(req.params.id)
     } catch (e) {
       return createError(e.code)
     }
@@ -56,7 +76,7 @@ export default async function categories(fastify: FastifyInstance) {
     Body: CategoryUpdateBody
   }>('/categories/:id', { schema: updateCategorySchema }, async (req) => {
     try {
-      return await categoryService.updateById(req.params.id, req.body)
+      return await categoryService.update(req.params, req.body)
     } catch (e) {
       return createError(e.code)
     }
@@ -66,7 +86,7 @@ export default async function categories(fastify: FastifyInstance) {
     Params: CategoryParams
   }>('/categories/:id', { schema: deleteCategorySchema }, async (req) => {
     try {
-      return await categoryService.deleteById(req.params.id)
+      return await categoryService.delete(req.params)
     } catch (e) {
       return createError(e.code)
     }
