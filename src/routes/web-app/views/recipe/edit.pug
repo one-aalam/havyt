@@ -3,7 +3,7 @@ block content
     if messages && messages.length
         each message in messages
             p #{message}
-    form(class="form centered", method="post", action="/recipes", enctype="multipart/form-data")
+    form(class="form centered", method="post", action=(id ? `/recipes/${id}/edit` : `/recipes/add`), enctype="multipart/form-data")
         fieldset
             legend(align="center") #{ id? 'Update' : 'Add' } Recipe
             if id

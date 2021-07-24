@@ -1,117 +1,89 @@
-// @ts-nocheck
+// @ts-ignore
 import { FastifyInstance } from 'fastify'
-import fs from 'fs'
-import { getPropsForTemplate, toArray } from '../../../lib/commons/utils'
-import {
-    Recipe,
-    RecipeQuerystring,
-    RecipeParams,
-    RecipeUpdateBody
-} from '../../recipe/types'
-import {
-    getRecipeSchema,
-    recipeCreateSchema
-} from '../../recipe/schemas'
-import {
-    CUISINES,
-    COURSES
-} from '../../recipe/fixtures'
-
-const renderConfig = {
-    desc: { renderAs: 'textarea'},
-    cuisineId: {values: CUISINES},
-    courseId: { values: COURSES },
-    imageUrl: { renderAs: 'file'}
-}
-
+import { getPropsForTemplate, toImageUrl, toArrayFromMultilineStrFields, toFlatFromMultipartBodySimple } from '../../../lib/commons/utils'
+import { RecipeService } from '../../recipe/service'
+import { Recipe, RecipeQuerystring, RecipeParams, RecipeCreateMultipartBody, RecipeUpdateMultipartBody, RecipeCreateBody } from '../../recipe/types'
+import { getRecipeSchema, recipeCreateSchema, createRecipeMultipartSchema, updateRecipeMultipartSchema } from '../../recipe/schemas'
+import { CategoryService } from '../../category/service'
+import { Category } from '../../category/types'
 
 
 export default async function routes(fastify: FastifyInstance) {
-    const recipeService = fastify.getStore<Recipe>('recipes')
+    const categoryStore = fastify.getStore<Category>('categories')
+  const categoryService = new CategoryService(categoryStore)
+  const recipeService = new RecipeService(fastify.getStore<Recipe>('recipes'), categoryStore)
 
-    fastify.get<{
-        Querystring: RecipeQuerystring
-    }>('/', async (req, reply) => {
-      const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
-      const recipes = await recipeService.getAll()
-      const recipesTplData = recipes
-        .filter((recipe) => !tag || recipe.tags?.map((tag) => tag.toLowerCase()).includes(tag))
-        .filter((recipe) => !cuisineId || recipe.cuisineId == cuisineId)
-        .filter((recipe) => !courseId || recipe.courseId == courseId)
-        .slice(offset, offset + limit)
 
-      await reply.view('recipe/index', {
-          recipes: recipesTplData
-      })
-    })
+  const renderConfig = {
+    desc: { renderAs: 'textarea' },
+    cuisineId: { values: categoryService.getAllItemsByCategoryType('cuisines') },
+    courseId: { values: categoryService.getAllItemsByCategoryType('courses')  },
+    imageUrl: { renderAs: 'file' },
+  }
 
   fastify.get<{
-      Querystring: RecipeQuerystring
-  }>('/recipes', async (req, reply) => {
-    const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
-    const recipes = await recipeService.getAll()
-    const recipesTplData = recipes
-      .filter((recipe) => !tag || recipe.tags?.map((tag) => tag.toLowerCase()).includes(tag))
-      .filter((recipe) => !cuisineId || recipe.cuisineId == cuisineId)
-      .filter((recipe) => !courseId || recipe.courseId == courseId)
-      .slice(offset, offset + limit)
-
+    Querystring: RecipeQuerystring
+  }>('/', async (req, reply) => {
+    const recipesTplData = await recipeService.getAll(req.query)
     await reply.view('recipe/index', {
-        recipes: recipesTplData
+      recipes: recipesTplData,
     })
   })
 
-fastify.get<{
+  fastify.get<{
+    Querystring: RecipeQuerystring
+  }>('/recipes', async (req, reply) => {
+    const recipesTplData = await recipeService.getAll(req.query)
+    await reply.view('recipe/index', {
+      recipes: recipesTplData,
+    })
+  })
+
+  fastify.get<{
     Params: RecipeParams
   }>('/recipes/:id', { schema: getRecipeSchema }, async (req, reply) => {
-      // @ts-ignore
-       const recipeTplData = await recipeService.getById(parseInt(req.params.id))
-       await reply.view('recipe/view', {
-        recipe: recipeTplData
-       })
-})
+    const recipeTplData = await recipeService.getOne(req.params)
+    await reply.view('recipe/view', {
+      recipe: recipeTplData,
+    })
+  })
 
-fastify.get('/recipes/add', async (req, reply) => {
-    const recipeTplData = getPropsForTemplate(recipeCreateSchema, {}, renderConfig )
+  fastify.get('/recipes/add', async (req, reply) => {
+    const recipeTplData = getPropsForTemplate(recipeCreateSchema, {}, renderConfig)
     await reply.view('recipe/edit', {
-        fields: recipeTplData
+      fields: recipeTplData,
     })
-})
+  })
 
-fastify.get<{
+  fastify.get<{
     Params: RecipeParams
-    }>('/recipes/:id/edit', { schema: getRecipeSchema }, async (req, reply) => {
-        const recipe = await recipeService.getById(req.params.id)
-        const recipeTplData = getPropsForTemplate(recipeCreateSchema, recipe, renderConfig)
-        await reply.view('recipe/edit', {
-            id: req.params.id,
-            fields: recipeTplData
+  }>('/recipes/:id/edit', { schema: getRecipeSchema }, async (req, reply) => {
+    const recipe = await recipeService.getOne(req.params)
+    const recipeTplData = getPropsForTemplate(recipeCreateSchema, recipe, renderConfig)
+    await reply.view('recipe/edit', {
+      id: req.params.id,
+      fields: recipeTplData,
     })
-})
+  })
 
-fastify.post('/recipes', async (req, reply) => {
-    const {id, ...body} = Object.entries(req.body).reduce(
-        (acc, [key, val]: [string, any]) => (val.value ? ((acc[key] = val.value), acc) : acc),
-        {}
-    )
-    if(req.body.imageUrl && req.body.imageUrl.filename) {
-        const imageUrl = req.body.imageUrl.filename // generate unique name
-        const imageUrlBuffer = await req.body.imageUrl.toBuffer()
-        fs.writeFileSync(`uploads/${imageUrl}`, imageUrlBuffer)
-        body.imageUrl = imageUrl
-    }
-    const recipeData = {
-        ...body,
-        ingredients: toArray(body.ingredients),
-        directions: toArray(body.directions),
-        tags: toArray(body.tags)
-    }
-    if(id) {
-        const recipe = await recipeService.updateById(parseInt(id), recipeData)
-        reply.redirect(`/recipes/${recipe.id}`)
-    } else {
-        const recipe = await recipeService.create(recipeData)
-        reply.redirect(`/recipes/${recipe.id}`)
-    }
-})
+  fastify.post<{ Body: RecipeCreateMultipartBody }>('/recipes/add',  { schema: createRecipeMultipartSchema }, async (req, reply) => {
+    const body = toArrayFromMultilineStrFields(toFlatFromMultipartBodySimple(req.body), ['ingredients', 'directions', 'tags']) as RecipeCreateBody
+    body.imageUrl = await toImageUrl(req.body.imageUrl)
+    const recipe = await recipeService.create(body)
+    reply.redirect(`/recipes/${recipe.id}`)
+  })
+
+  fastify.post<{
+      Params: RecipeParams,
+      Body: RecipeUpdateMultipartBody
+    }>('/recipes/:id/edit',  { schema: updateRecipeMultipartSchema },  async (req, reply) => {
+    const body = toArrayFromMultilineStrFields(toFlatFromMultipartBodySimple(req.body), ['ingredients', 'directions', 'tags'])  as RecipeCreateBody
+    body.imageUrl = req.body.imageUrl ? await toImageUrl(req.body.imageUrl) : ''
+    const recipe = await recipeService.update(req.params, body)
+    const recipeTplData = getPropsForTemplate(recipeCreateSchema, recipe, renderConfig)
+    await reply.view('recipe/edit', {
+        id: req.params.id,
+        fields: recipeTplData,
+    })
+  })
 }
