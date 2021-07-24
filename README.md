@@ -1,5 +1,4 @@
-# Havyt
-<img src="./public/logo.png" alt="Havyt Logo"/>
+<img src="./public/logo.png" alt="Havyt"/>
 
 Learn Fastify by building a Recipe App (Typescript Ready)
 
