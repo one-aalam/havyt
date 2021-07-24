@@ -6,6 +6,7 @@ import storeConfig from './config/store'
 import swaggerConfig from './config/swagger'
 import upConfig from './config/up'
 import corsConfig from './config/cors'
+import uploadConfig from './config/upload'
 
 export const buildServer = (): FastifyInstance => {
   const ROOT_DIR = path.join(__dirname, '..')
@@ -23,6 +24,15 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('under-pressure'), upConfig)
   fastify.register(import('fastify-cors'), corsConfig)
   fastify.register(import('fastify-favicon'))
+  fastify.register(import('fastify-multipart'), {
+    attachFieldsToBody: true,
+    limits: uploadConfig.limits,
+  })
+  fastify.register(import('fastify-static'), {
+    root: path.join(ROOT_DIR, 'uploads'),
+    prefix: uploadConfig.dir,
+    decorateReply: false,
+  })
 
   // fastify.register(import('./plugins/logan'))
   // Register custom App plugins
@@ -36,7 +46,7 @@ export const buildServer = (): FastifyInstance => {
   fastify.register(import('./routes/auth'), { prefix: '/api' })
 
   fastify.register(import('./routes/web-app'), {
-      rootDir: ROOT_DIR
+    rootDir: ROOT_DIR,
   })
 
   // return the Server instance
