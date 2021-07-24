@@ -42,6 +42,52 @@ export const recipeCreateSchema = {
   additionalProperties: false,
 } as const
 
+export const multipartFileFieldSchema = {
+    $id: 'fileFieldSchema',
+    type: 'object',
+    properties: {
+        filepath: { type: 'string' },
+        fieldname: { type: 'string' },
+        filename: { type: 'string' },
+        encoding: { type: 'string' },
+        mimetype: { type: 'string' },
+    },
+    required: ['fieldname', 'filename']
+} as const
+
+export const multipartFieldSchema = {
+    $id: 'multipartFieldSchema',
+    type: 'object',
+    properties: {
+        value: { type: 'string' },
+        fieldname: { type: 'string' },
+        fieldnameTruncated: { type: 'boolean' },
+        valueTruncated: { type: 'boolean' },
+    },
+    required: ['value']
+} as const
+
+
+export const recipeCreateMultipartSchema = {
+    ...recipeCreateSchema,
+    $id: 'recipeCreateMultipartSchema',
+    consumes: ['multipart/form-data'],
+    properties: {
+        name: { oneOf: [recipeCreateSchema.properties.name, multipartFieldSchema]},
+        desc: { oneOf: [recipeCreateSchema.properties.desc, multipartFieldSchema]},
+        imageUrl: { oneOf: [recipeCreateSchema.properties.imageUrl, multipartFileFieldSchema]},
+        courseId: { oneOf: [recipeCreateSchema.properties.courseId, multipartFieldSchema]},
+        cuisineId: { oneOf: [recipeCreateSchema.properties.cuisineId, multipartFieldSchema]},
+        serves: { oneOf: [recipeCreateSchema.properties.serves, multipartFieldSchema]},
+        prepTime: { oneOf: [recipeCreateSchema.properties.prepTime, multipartFieldSchema]},
+        cookingTime: { oneOf: [recipeCreateSchema.properties.cookingTime, multipartFieldSchema]},
+        ingredients: { oneOf: [recipeCreateSchema.properties.ingredients, multipartFieldSchema]},
+        directions: { oneOf: [recipeCreateSchema.properties.directions, multipartFieldSchema]},
+        source: { oneOf: [recipeCreateSchema.properties.source, multipartFieldSchema]},
+        tags: { oneOf: [recipeCreateSchema.properties.tags, multipartFieldSchema]},
+    },
+} as const
+
 export const recipeSchema = {
   $id: 'recipeSchema',
   type: 'object',
@@ -58,6 +104,12 @@ export const recipeUpdateSchema = {
   $id: 'recipeUpdateSchema',
   required: [],
 } as const
+
+export const recipeUpdateMultipartSchema = {
+    ...recipeCreateMultipartSchema,
+    $id: 'recipeUpdateMultipartSchema',
+    required: [],
+  } as const
 
 export const recipeParamsSchema = {
   $id: 'recipeParamsSchema',
@@ -111,6 +163,11 @@ export const createRecipeSchema = {
   },
 }
 
+export const createRecipeMultipartSchema = {
+    ...createRecipeSchema,
+    body: recipeCreateMultipartSchema,
+}
+
 // update
 export const updateRecipeSchema = {
   params: recipeParamsSchema,
@@ -119,6 +176,11 @@ export const updateRecipeSchema = {
     '2xx': recipeSchema,
     '4xx': errorSchema,
   },
+}
+
+export const updateRecipeMultipartSchema = {
+    ...updateRecipeSchema,
+    body: recipeUpdateMultipartSchema
 }
 
 // delete

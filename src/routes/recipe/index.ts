@@ -3,8 +3,8 @@ import createError from 'http-errors'
 import {
   getAllRecipesSchema,
   getRecipeSchema,
-  createRecipeSchema,
-  updateRecipeSchema,
+  createRecipeMultipartSchema,
+  updateRecipeMultipartSchema,
   deleteRecipeSchema,
 } from './schemas'
 import {
@@ -13,53 +13,71 @@ import {
   RecipeParams,
   RecipeCreateBody,
   RecipeUpdateBody,
+  RecipeCreateMultipartBody,
+  RecipeUpdateMultipartBody,
 } from './types'
+import { RecipeService } from './service'
+import { Category } from '../category/types'
+import { toImageUrl, toFlatFromMultipartBody } from '../../lib/commons/utils'
 
 export default async function recipes(fastify: FastifyInstance) {
-  const recipeService = fastify.getStore<Recipe>('recipes')
+  const recipeService = new RecipeService(
+      fastify.getStore<Recipe>('recipes'),
+      fastify.getStore<Category>('categories')
+    )
 
   fastify.get<{
     Querystring: RecipeQuerystring
-  }>('/recipes', { schema: getAllRecipesSchema }, async (req) => {
-    const { offset = 0, limit = 10, tag, cuisineId, courseId } = req.query
-    const recipes = await recipeService.getAll()
-    return recipes
-      .filter((recipe) => !tag || recipe.tags?.map((tag) => tag.toLowerCase()).includes(tag))
-      .filter((recipe) => !cuisineId || recipe.cuisineId == cuisineId)
-      .filter((recipe) => !courseId || recipe.courseId == courseId)
-      .slice(offset, offset + limit)
-  })
+  }>('/recipes', {
+      schema: getAllRecipesSchema
+    }, async (req) => await recipeService.getAll(req.query)
+)
 
   // get the recipe by provided id
   fastify.get<{
     Params: RecipeParams
   }>('/recipes/:id', { schema: getRecipeSchema }, async (req) => {
     try {
-      return await recipeService.getById(req.params.id)
+      return await recipeService.getOne(req.params)
     } catch (e) {
       return createError(e.code)
     }
   })
 
-  fastify.post<{ Body: RecipeCreateBody }>(
+  fastify.post<{ Body: RecipeCreateMultipartBody }>(
     '/recipes',
-    { schema: createRecipeSchema },
+    { schema: createRecipeMultipartSchema },
     async (req, reply) => {
       try {
-        const recipe = await recipeService.create(req.body)
+          let recipe;
+          if(req.isMultipart()) {
+            const body = toFlatFromMultipartBody(req.body) as RecipeCreateBody
+            body.imageUrl = await toImageUrl(req.body.imageUrl)
+            recipe = await recipeService.create(body)
+          } else {
+              // @ts-ignore
+            recipe = await recipeService.create(req.body)
+          }
         reply.code(201).send(recipe)
       } catch (e) {
-        return createError(e.code)
+        return createError(e.code, e.message)
       }
     }
   )
 
   fastify.put<{
     Params: RecipeParams
-    Body: RecipeUpdateBody
-  }>('/recipes/:id', { schema: updateRecipeSchema }, async (req) => {
+    Body: RecipeUpdateMultipartBody
+  }>('/recipes/:id', { schema: updateRecipeMultipartSchema }, async (req) => {
     try {
-      return await recipeService.updateById(req.params.id, req.body)
+        if(req.isMultipart()) {
+            const body = toFlatFromMultipartBody(req.body) as RecipeUpdateBody
+            body.imageUrl = req.body.imageUrl ? await toImageUrl(req.body.imageUrl) : ''
+            return await recipeService.update(req.params, body)
+        } else {
+            // @ts-ignore
+            return await recipeService.update(req.params, req.body)
+        }
     } catch (e) {
       return createError(e.code)
     }
@@ -69,7 +87,7 @@ export default async function recipes(fastify: FastifyInstance) {
     Params: RecipeParams
   }>('/recipes/:id', { schema: deleteRecipeSchema }, async (req, reply) => {
     try {
-      return await recipeService.deleteById(req.params.id)
+      return await recipeService.delete(req.params)
     } catch (e) {
       return createError(e.code)
     }
