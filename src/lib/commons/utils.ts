@@ -70,12 +70,20 @@ export function toArray(src: string) {
  * @param multilineStrFields The keys?
  * @returns No keys with multiline string left
  */
-export const toArrayFromMultilineStrFields = (source: {[key:string]: any}, multilineStrFields: string[]) => {
-    return Object.entries(source).reduce(
-        // @ts-ignore
-        (acc, [key, val]: [string, any]) => (val ? ((acc[key] = multilineStrFields.includes(key) && !Array.isArray(val) ? toArray(val): val), acc) : acc),
-        {}
-    )
+export const toArrayFromMultilineStrFields = (
+  source: { [key: string]: any },
+  multilineStrFields: string[]
+) => {
+  return Object.entries(source).reduce(
+    // @ts-ignore
+    (acc, [key, val]: [string, any]) =>
+      val
+        ? ((acc[key] =
+            multilineStrFields.includes(key) && !Array.isArray(val) ? toArray(val) : val),
+          acc)
+        : acc,
+    {}
+  )
 }
 
 /**
@@ -83,27 +91,34 @@ export const toArrayFromMultilineStrFields = (source: {[key:string]: any}, multi
  * @param source String that could be an Array in disguise
  * @returns Array, coz that's wot you need in return right?
  */
-export const isStringifiedArray = (source: string) => source && source.indexOf('[') === 0 && source.indexOf(']') === source.length - 1
+export const isStringifiedArray = (source: string) =>
+  source && source.indexOf('[') === 0 && source.indexOf(']') === source.length - 1
 
 /**
  *
  * @param source The FormData with all the values as string
  * @returns parsed FormData, ready for persisting
  */
-export const toFlatFromMultipartBody = (source: {[key:string]: any}) => {
-    return Object.entries(source).reduce(
-        // @ts-ignore
-        (acc, [key, val]: [string, any]) => ((acc[key] = !isNaN(val.value) || isStringifiedArray(val.value) ? JSON.parse(val.value) : val.value), acc),
-        {}
-    )
+export const toFlatFromMultipartBody = (source: { [key: string]: any }) => {
+  return Object.entries(source).reduce(
+    // @ts-ignore
+    (acc, [key, val]: [string, any]) => (
+      (acc[key] =
+        !isNaN(val.value) || isStringifiedArray(val.value) ? JSON.parse(val.value) : val.value),
+      acc
+    ),
+    {}
+  )
 }
 
-export const toFlatFromMultipartBodySimple = (source: {[key:string]: any}) => {
-    return Object.entries(source).reduce(
-        // @ts-ignore
-        (acc, [key, val]: [string, any]) => ((acc[key] = parseInt(val.value) == val.value ? parseInt(val.value) : val.value), acc),
-        {}
-    )
+export const toFlatFromMultipartBodySimple = (source: { [key: string]: any }) => {
+  return Object.entries(source).reduce(
+    // @ts-ignore
+    (acc, [key, val]: [string, any]) => (
+      (acc[key] = parseInt(val.value) == val.value ? parseInt(val.value) : val.value), acc
+    ),
+    {}
+  )
 }
 
 /**
@@ -111,12 +126,12 @@ export const toFlatFromMultipartBodySimple = (source: {[key:string]: any}) => {
  * @param file MultipartFile to save in the upload directory
  * @returns the filename back, or an empty string
  */
-export const toImageUrl = async(file: MultipartFile): Promise<string> => {
-    if(file && file.filename) {
-        const fileName = file.filename // generate unique name
-        const fileBuffer = await file.toBuffer()
-        fs.writeFileSync(`${uploadConfig.dir.replace('/', '')}/${fileName}`, fileBuffer)
-        return Promise.resolve(fileName)
-    }
-    return Promise.resolve('')
+export const toImageUrl = async (file: MultipartFile): Promise<string> => {
+  if (file && file.filename) {
+    const fileName = file.filename // generate unique name
+    const fileBuffer = await file.toBuffer()
+    fs.writeFileSync(`${uploadConfig.dir.replace('/', '')}/${fileName}`, fileBuffer)
+    return Promise.resolve(fileName)
+  }
+  return Promise.resolve('')
 }
