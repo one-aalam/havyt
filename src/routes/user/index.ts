@@ -1,24 +1,38 @@
 import { FastifyInstance } from 'fastify'
-import { getUserSchema } from './schemas'
-import { UserParams } from './types'
-import { USERS } from './fixtures'
+import { Container } from 'typedi'
+import createError from 'http-errors'
+import { getUserSchema, getAllUsersSchema, updateUserSchema } from './schemas'
+import { UserParams, UserUpdateBody } from './types'
+import { UserService } from './service'
 
 export default async function users(fastify: FastifyInstance) {
+    const userService = Container.get(UserService)
   // get all the users
-  fastify.get('/users', async () => USERS)
+  fastify.get('/users', { schema: getAllUsersSchema }, async () => await userService.getAll())
 
   // get the user by provided id
   fastify.get<{
     Params: UserParams
-  }>('/users/:id', { schema: getUserSchema }, async (req, reply) => {
-    const user = USERS.find((user) => user.id === req.params.id)
-    if (!user) {
-      reply.code(404).send({
-        statusCode: 404,
-        error: 'NotFoundError',
-        message: 'Not Found',
-      })
-    }
-    return user
+  }>('/users/:id', { schema: getUserSchema }, async (req) => {
+    try {
+        return await userService.getOne(req.params)
+      } catch (e) {
+        return createError(e.code)
+      }
   })
+
+  fastify.put<{
+    Params: UserParams,
+    Body: UserUpdateBody
+  }>('/users/:id', { schema: updateUserSchema }, async (req) => {
+    try {
+        console.log(req.body)
+        return await userService.update(req.params, req.body)
+      } catch (e) {
+        return createError(e.code)
+      }
+  })
+
+
+
 }
