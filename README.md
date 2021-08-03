@@ -2,6 +2,26 @@
 
 Learn Fastify by building a Recipe App (Typescript Ready)
 
+__Havyt__ is Node.js Full-Stack Web Application that's built ground-up, step-by-step to
+- Introduce the essential components of Fastify like the _server_, _router_ and powerful constructs like _plugins_, _hooks_ and _decorators_ all while remaining simple in its approach so that it's easy for new comers to the Framework to pick things
+- Show the workings of a modern  Node.js framework that values stability, extensibility and speed over simple ergnomics
+- Possibly accomodate all sorts of very common use cases with time (while remaining commited to simplicity) either in the `main` branch
+    - Fastify for APIs
+    - Fastify for Server Side Web Apps
+    - Fastify & Auth
+- Or, extended use cases like
+    - Fastify & Modern FE Frameworks (Svelte, SolidJS, etc.)
+    - Fastify Fully-Tested (setup is available, but lagging currently )
+    - Fastify and different DB flavors(The main repo has just a hand-rolled FS based data store)
+    - Fastify & GraphQL
+    - Fastify for Serverless
+    - Fastify & Micro-services
+
+Note: The repo may remain **Concept-Complete First** than Feature-complete, so that individual important commits could be checked out, and built upon as an exercise to learn about different features in-depth.
+
+## Commits so far...
+__partially documented__
+
 | Topic                                    | Sub-topic                                                  | Commit                                                                             |
 |------------------------------------------|------------------------------------------------------------|------------------------------------------------------------------------------------|
 | 1.Setup                                  | [Set-up Typescript, ESLint, Prettier, ts-node-dev](https://github.com/one-aalam/havyt/commit/856878f689a27ba846c7212bdbd580df47ce6df2)           |
