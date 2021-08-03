@@ -1,27 +1,41 @@
-import { FastifyInstance, FastifyRequest } from 'fastify'
-import { loginSchema } from './schemas'
-import { AuthLoginPayload } from './types'
-import { USERS } from '../user/fixtures'
+import { FastifyInstance } from 'fastify'
+import createError from 'http-errors'
+import { Container } from 'typedi'
+import { AuthSignInPayload, AuthSignUpPayload } from './types'
+import { authSignInSchema, authSignUpSchema } from './schemas'
+import { AuthService } from './service'
+
 
 export default async function auth(fastify: FastifyInstance) {
+
+    const authService = Container.get(AuthService)
   // log-in a user
-  fastify.post<{ Body: AuthLoginPayload }>(
-    '/auth/login',
+  fastify.post<{ Body: AuthSignInPayload }>(
+    '/auth/signin',
     {
-      schema: loginSchema,
+      schema: authSignInSchema,
     },
-    async (req: FastifyRequest, reply) => {
-      // @ts-ignore
-      const { email, password } = req.body
-      const user = USERS.find((user) => user.email == email)
-      if (user && password == process.env.APP_PASS_ALL) {
-        reply.send(user)
+    async (req) => {
+      try {
+        return await authService.signIn(req.body)
+      } catch (e) {
+        return createError(e.code)
       }
-      reply.code(401).send({
-        statusCode: 401,
-        error: 'NotAuthorized',
-        message: 'User not authorized',
-      })
+    }
+  )
+
+  fastify.post<{ Body: AuthSignUpPayload }>(
+    '/auth/signup',
+    {
+      schema: authSignUpSchema,
+    },
+    async (req, reply) => {
+        try {
+            const user = await authService.signUp(req.body)
+            reply.code(201).send(user)
+        } catch (e) {
+            return createError(e.code)
+        }
     }
   )
 }

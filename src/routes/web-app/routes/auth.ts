@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { authSchema } from '../../auth/schemas'
+import { authSignInPayloadSchema } from '../../auth/schemas'
 
 export default async function routes(fastify: FastifyInstance) {
   fastify.get('/auth', async (req, reply) => await reply.view('auth'))
@@ -8,7 +8,7 @@ export default async function routes(fastify: FastifyInstance) {
     '/auth',
     {
       schema: {
-        body: authSchema,
+        body: authSignInPayloadSchema,
       },
       attachValidation: true,
     },

@@ -1,8 +1,8 @@
 import { errorSchema } from '../../lib/commons/schemas'
-import { userSchema } from '../user/schemas'
+import { userCreateSchema, userRespSchema } from '../user/schemas'
 
-export const authSchema = {
-  $id: 'authSchema',
+export const authSignInPayloadSchema = {
+  $id: 'authSignInPayloadSchema',
   type: 'object',
   properties: {
     email: { type: 'string', format: 'email' },
@@ -12,10 +12,18 @@ export const authSchema = {
   additionalProperties: false,
 } as const
 
-export const loginSchema = {
-  body: { user: authSchema },
+export const authSignInSchema = {
+  body: authSignInPayloadSchema,
   response: {
-    '2xx': userSchema,
+    '2xx': userRespSchema,
     '4xx': errorSchema,
   },
-}
+} as const
+
+export const authSignUpSchema = {
+    body: userCreateSchema,
+    response: {
+      '2xx': userRespSchema,
+      '4xx': errorSchema,
+    },
+  } as const

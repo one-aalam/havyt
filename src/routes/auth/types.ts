@@ -1,4 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts'
-import { authSchema } from './schemas'
+import { authSignInPayloadSchema } from './schemas'
+import { UserCreateBody } from '../user/types'
 
-export type AuthLoginPayload = FromSchema<typeof authSchema>
+export type AuthSignInPayload = FromSchema<typeof authSignInPayloadSchema>
+export type AuthSignUpPayload = UserCreateBody
