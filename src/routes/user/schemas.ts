@@ -1,4 +1,5 @@
 import { errorSchema } from '../../lib/commons/schemas'
+import userConfig from '../../config/user'
 
 export const userSchemaPublicProps = {
     username: { type: 'string', minLength: 3 },
@@ -13,7 +14,7 @@ export const userCreateSchema = {
     type: 'object',
     properties: {
         ...userSchemaPublicProps,
-        password: { type: 'string', minLength: 6, maxLength: 15 },
+        password: { type: 'string', minLength: 6, maxLength: 15, pattern: userConfig.passRegex },
     },
     required: ['username', 'email', 'password' ],
     additionalProperties: false,
