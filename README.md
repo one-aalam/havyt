@@ -10,7 +10,7 @@ __Havyt__ is Node.js Full-Stack Web Application that's built ground-up, step-by-
     - Fastify for Server Side Web Apps
     - Fastify & Auth
 - Or, extended use cases like (in the different branches or forks)
-    - Fastify & Modern FE Frameworks (Svelte, SolidJS, etc.)
+    - Fastify & Modern FE Frameworks (Svelte, SolidJS, Next.js, Vite, etc.)
     - Fastify Fully-Tested (setup is available, but lagging currently )
     - Fastify and different DB flavors(The main repo has just a hand-rolled FS based data store)
     - Fastify & GraphQL
