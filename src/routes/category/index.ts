@@ -49,7 +49,9 @@ export default async function categories(fastify: FastifyInstance) {
   })
 
   fastify.get<{
-    Params: CategoryParams
+    Params: {
+        id: number
+    }
   }>('/categories/items/:id', { schema: getCategoryItemSchema }, async (req) => {
     try {
       return await categoryService.getItemByCategoryItemId(req.params.id)

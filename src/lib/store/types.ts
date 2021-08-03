@@ -2,18 +2,18 @@ import StormDB from 'stormdb'
 import { AppColl } from '../commons/types'
 
 export interface IHasIdentity {
-  id: number
+  id: string
   [key: string]: any
 }
 
 export interface IRepository<T> {
   getAll(): Promise<T[]>
-  getById(id: number): Promise<T>
+  getById(id: string): Promise<T>
   getByKey(key: string, val: string | number | boolean): Promise<T>
-  getIndexById(id: number): Promise<number>
+  getIndexById(id: string): Promise<number>
   create(entity: T): Promise<T>
-  updateById(id: number, updates: Partial<T>): Promise<T>
-  deleteById(id: number): Promise<T>
+  updateById(id: string, updates: Partial<T>): Promise<T>
+  deleteById(id: string): Promise<T>
 }
 
 // let's maintain it here for now

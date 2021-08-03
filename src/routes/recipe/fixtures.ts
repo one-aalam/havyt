@@ -2,7 +2,7 @@ import { Recipe } from './types'
 
 export const RECIPES: Recipe[] = [
   {
-    id: 1,
+    id: 'oWiA58EeSdGKvQlMMWZiQ',
     name: 'Chicken Flautas',
     desc: 'These Chicken Flautas are filled with chicken, salsa, and cheese and baked in the oven until crispy. Your whole family will love this easy, delicious recipe.',
     imageUrl:
@@ -30,7 +30,7 @@ export const RECIPES: Recipe[] = [
     tags: ['Flautas', 'Chicken Flautas'],
   },
   {
-    id: 2,
+    id: 'Fc5784R9LIMLAJmmX8YTp',
     name: 'Curried chicken salad',
     desc: '',
     imageUrl: 'https://www.chatelaine.com/wp-content/uploads/2013/05/Curried-chicken-salad.jpg',
@@ -68,7 +68,7 @@ export const RECIPES: Recipe[] = [
     tags: ['Chicken'],
   },
   {
-    id: 3,
+    id: 'lK9LPJpWX4hu2XaHeAeex',
     name: 'Greek Salad',
     source: 'Food Network (two different recipes)',
     imageUrl: '',
@@ -102,7 +102,7 @@ export const RECIPES: Recipe[] = [
     tags: ['main', 'greek', 'salad', 'dressing'],
   },
   {
-    id: 4,
+    id: 'xeeIZqkzdgKrnfc-ri55Y',
     name: 'Flaky Buttermilk Biscuits',
     source: 'Cooks Illustrated (All-Time Best Recipes 2010)',
     prepTime: 0,
@@ -147,7 +147,7 @@ export const RECIPES: Recipe[] = [
     tags: ['biscuits', 'bread', 'sides'],
   },
   {
-    id: 5,
+    id: 'QxuW0Bkdce0CmBE7k1Z08',
     name: 'Margherita Salad',
     source: 'Adapted from Food Network Magazine (Chicken Parmesan Salad)',
     prepTime: 0,
@@ -187,7 +187,7 @@ export const RECIPES: Recipe[] = [
     tags: ['salad', 'dressing', 'main'],
   },
   {
-    id: 6,
+    id: 'KGQIQO5l4zH_uvYXs7s6f',
     name: 'Mexican Ensalada',
     source: 'Yuri Elkaim',
     prepTime: 0,
@@ -218,7 +218,7 @@ export const RECIPES: Recipe[] = [
     tags: ['salad', 'mexican', 'FUF', 'main', 'vegetarian'],
   },
   {
-    id: 7,
+    id: 'ZGLisF3UXdfH2wPmTY0RJ',
     name: 'Sweet Almond Date Smoothie',
     source: 'Yuri Elkaim',
     prepTime: 0,
@@ -238,7 +238,7 @@ export const RECIPES: Recipe[] = [
     tags: ['smoothie', 'FUF', 'breakfast'],
   },
   {
-    id: 8,
+    id: 'tnrgY8tmIVIxlAqWhpobC',
     name: 'The Shake',
     source: 'Yuri Elkaim',
     prepTime: 0,
@@ -260,7 +260,7 @@ export const RECIPES: Recipe[] = [
     tags: ['smoothie', 'FUF', 'breakfast'],
   },
   {
-    id: 9,
+    id: '4niS-B2Eh-V9hkK01qVxZ',
     name: 'Pasta with roasted vegetables and bacon',
     source: 'Martha Stewart Living Oct 2011',
     prepTime: 900,
@@ -302,7 +302,7 @@ export const RECIPES: Recipe[] = [
     tags: ['pasta', 'main'],
   },
   {
-    id: 10,
+    id: 'cCC_VxHcn3Voba0ejvRLb',
     name: 'Triple Grilled Cheese',
     source: 'Based on Food Network Magazine’s “Triple grilled cheese with tomato soup”, Sept 2010.',
     prepTime: 600,
@@ -327,7 +327,7 @@ export const RECIPES: Recipe[] = [
     tags: ['sandwich', 'cheese', 'main'],
   },
   {
-    id: 11,
+    id: 'm_XMxNXZxVZJn1h3IXlUA',
     name: 'Pizza bianca',
     source: 'Everyday Food June 2011',
     prepTime: 0,
@@ -365,7 +365,7 @@ export const RECIPES: Recipe[] = [
     tags: ['pizza', 'vegetarian', 'main'],
   },
   {
-    id: 12,
+    id: '_eympq3ahdENiCrO1YIH4',
     name: 'Mediterranean Patio Pizza',
     source: 'http://new.pamperedchef.com/recipe/10006',
     prepTime: 0,
@@ -407,99 +407,5 @@ export const RECIPES: Recipe[] = [
       'salt and pepper',
     ],
     tags: ['pizza', 'main', 'vegetarian'],
-  },
-]
-
-export const CUISINES = [
-  {
-    id: 1,
-    name: 'American',
-  },
-  {
-    id: 2,
-    name: 'Italian',
-  },
-  {
-    id: 3,
-    name: 'Asian',
-  },
-  {
-    id: 4,
-    name: 'Mexican',
-  },
-  {
-    id: 5,
-    name: 'Southern & Soul Food',
-  },
-  {
-    id: 6,
-    name: 'French',
-  },
-  {
-    id: 7,
-    name: 'Barbecue',
-  },
-  {
-    id: 8,
-    name: 'Indian',
-  },
-  {
-    id: 9,
-    name: 'Chinese',
-  },
-  {
-    id: 10,
-    name: 'Mediterranean',
-  },
-  {
-    id: 11,
-    name: 'Greek',
-  },
-  {
-    id: 12,
-    name: 'English',
-  },
-  {
-    id: 13,
-    name: 'Spanish',
-  },
-]
-
-export const COURSES = [
-  {
-    id: 1,
-    name: 'Appetizers',
-  },
-  {
-    id: 2,
-    name: 'Breakfast',
-  },
-  {
-    id: 3,
-    name: 'Brunch',
-  },
-  {
-    id: 4,
-    name: 'Kid-Friendly',
-  },
-  {
-    id: 5,
-    name: 'Dessert',
-  },
-  {
-    id: 6,
-    name: 'Dinner',
-  },
-  {
-    id: 7,
-    name: 'Lunch',
-  },
-  {
-    id: 8,
-    name: 'Main Dish',
-  },
-  {
-    id: 9,
-    name: 'Salad',
   },
 ]

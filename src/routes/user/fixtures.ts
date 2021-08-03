@@ -2,7 +2,7 @@ import { User } from './types'
 
 export const USERS: User[] = [
   {
-    id: 1,
+    id: 'oyJrpbMBQU61YDytnSk6W',
     username: 'jarebnorbury',
     firstName: 'Jareb',
     lastName: 'Norbury',
@@ -11,7 +11,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
   },
   {
-    id: 2,
+    id: 'qCfWu9p_drAA-MpsIDZU4',
     username: 'derbyreimers',
     firstName: 'Derby',
     lastName: 'Reimers',
@@ -20,7 +20,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg',
   },
   {
-    id: 3,
+    id: 'q1a6Absl5Emmb4qqzkGCc',
     username: 'latisha_rocks',
     firstName: 'Latisha',
     lastName: 'Mercik',
@@ -29,7 +29,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
   },
   {
-    id: 4,
+    id: 'BIQ6nRp6U-IaONb8WbN0u',
     username: 'cirsto',
     firstName: 'Cirstoforo',
     lastName: 'Drejer',
@@ -38,7 +38,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/459947/pexels-photo-459947.jpeg',
   },
   {
-    id: 5,
+    id: 'aeKXGUpLF0SmrqvwL-grT',
     username: 'killough',
     firstName: 'Paola',
     lastName: 'Killough',
@@ -47,7 +47,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/449734/pexels-photo-449734.jpeg',
   },
   {
-    id: 6,
+    id: 'f5fDQz6dcIw8VhjpncPWO',
     username: 'shirley',
     firstName: 'Gaynor',
     lastName: 'Shirley',
@@ -56,7 +56,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg',
   },
   {
-    id: 7,
+    id: 'AwGc4M1vYGc6c53k7aiiD',
     username: 'harriecollip',
     firstName: 'Harrie',
     lastName: 'Collip',
@@ -65,7 +65,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg',
   },
   {
-    id: 8,
+    id: 'N6O-AkU0OkPYZc9kzAGDG',
     username: 'filbertetrue',
     firstName: 'Filberte',
     lastName: 'Truelock',
@@ -74,7 +74,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/769772/pexels-photo-769772.jpeg',
   },
   {
-    id: 9,
+    id: 'G68DFtAmiYz0h3CMc2VSh',
     username: 'linetteone',
     firstName: 'Linette',
     lastName: 'Paniman',
@@ -83,7 +83,7 @@ export const USERS: User[] = [
     avatar: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg',
   },
   {
-    id: 10,
+    id: 'l_xq1revWbsbBQyiNd2Xa',
     username: 'ailsunbeardy',
     firstName: 'Ailsun',
     lastName: 'Beardshall',

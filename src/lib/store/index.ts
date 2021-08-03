@@ -1,4 +1,5 @@
 import StormDB from 'stormdb'
+import { nanoid } from 'nanoid'
 import { Service, Token } from 'typedi'
 import { IHasIdentity } from '../commons/types'
 import { StoreItemNotFoundError, StoreItemConflictError } from './store-error'
@@ -12,8 +13,6 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
   private _coll: string
   private _data: T[]
   private _unique: keyof T | false
-
-  private _currId = 0
 
   constructor(
     db: StormDB,
@@ -32,12 +31,11 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
         ? options.data
         : []
     this._unique = options.unique ? options.unique : false
-    this._currId = this._data.length ? this._data[this._data.length - 1].id : 0
   }
 
   getAll = () => Promise.resolve(this._data)
 
-  getById = async (id: number) => {
+  getById = async (id: string) => {
     const item = this._getById(id)
     return item ? Promise.resolve(item) : Promise.reject(new StoreItemNotFoundError('id', id))
   }
@@ -47,7 +45,7 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     return item ? Promise.resolve(item) : Promise.reject(new StoreItemNotFoundError(key, val))
   }
 
-  getIndexById = async (id: number) => {
+  getIndexById = async (id: string) => {
     const index = this._getIndexById(id)
     return index ? Promise.resolve(index) : Promise.reject(new StoreItemNotFoundError('id', id))
   }
@@ -74,7 +72,7 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     return Promise.resolve(item)
   }
 
-  updateById = async (id: number, attrs: Partial<T>) => {
+  updateById = async (id: string, attrs: Partial<T>) => {
     const index = await this._getIndexById(id)
     if (index >= 0) {
       if (this._unique) {
@@ -101,7 +99,7 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     return Promise.reject(new StoreItemNotFoundError('id', id))
   }
 
-  deleteById = async (id: number) => {
+  deleteById = async (id: string) => {
     const index = this._getIndexById(id)
     if (index >= 0) {
       const item = this._data[index]
@@ -112,16 +110,15 @@ export class StoreService<T extends IHasIdentity> implements IRepository<T> {
     return Promise.reject(new StoreItemNotFoundError('id', id))
   }
 
-  private _generateId(): number {
-    this._currId += 1
-    return this._currId
+  private _generateId(): string {
+    return nanoid()
   }
 
-  private _getById = (id: number) => {
+  private _getById = (id: string) => {
     return this._data.find((item) => item.id === id)
   }
 
-  private _getIndexById = (id: number) => {
+  private _getIndexById = (id: string) => {
     return this._data.findIndex((item) => item.id === id)
   }
 

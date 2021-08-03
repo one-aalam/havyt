@@ -24,7 +24,7 @@ export const userSchema = {
   $id: 'userSchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     ...userCreateSchema.properties,
   },
   required: ['id', 'username', 'email'],
@@ -35,7 +35,7 @@ export const userRespSchema = {
     $id: 'userRespSchema',
     type: 'object',
     properties: {
-      id: { type: 'number' },
+      id: { type: 'string' },
       ...userSchemaPublicProps,
     },
     required: ['id', 'username', 'email'],
@@ -52,7 +52,7 @@ export const userParamsSchema = {
   $id: 'userParamsSchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
   },
   required: ['id'],
   additionalProperties: false,

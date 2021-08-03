@@ -91,7 +91,7 @@ export const recipeSchema = {
   $id: 'recipeSchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     ...recipeCreateSchema.properties,
   },
   required: [...recipeCreateSchema.required, 'id'],
@@ -114,7 +114,7 @@ export const recipeParamsSchema = {
   $id: 'recipeParamsSchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
   },
   required: ['id'],
   additionalProperties: false,

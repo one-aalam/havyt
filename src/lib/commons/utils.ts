@@ -75,9 +75,9 @@ export const toArrayFromMultilineStrFields = (
   multilineStrFields: string[]
 ) => {
   return Object.entries(source).reduce(
-    // @ts-ignore
     (acc, [key, val]: [string, any]) =>
       val
+          // @ts-ignore
         ? ((acc[key] =
             multilineStrFields.includes(key) && !Array.isArray(val) ? toArray(val) : val),
           acc)
@@ -101,8 +101,8 @@ export const isStringifiedArray = (source: string) =>
  */
 export const toFlatFromMultipartBody = (source: { [key: string]: any }) => {
   return Object.entries(source).reduce(
-    // @ts-ignore
     (acc, [key, val]: [string, any]) => (
+    // @ts-ignore
       (acc[key] =
         !isNaN(val.value) || isStringifiedArray(val.value) ? JSON.parse(val.value) : val.value),
       acc
@@ -113,8 +113,8 @@ export const toFlatFromMultipartBody = (source: { [key: string]: any }) => {
 
 export const toFlatFromMultipartBodySimple = (source: { [key: string]: any }) => {
   return Object.entries(source).reduce(
-    // @ts-ignore
     (acc, [key, val]: [string, any]) => (
+    // @ts-ignore
       (acc[key] = parseInt(val.value) == val.value ? parseInt(val.value) : val.value), acc
     ),
     {}

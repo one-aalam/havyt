@@ -19,7 +19,7 @@ export const categorySchema = {
   $id: 'categorySchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
     ...categoryCreateSchema.properties,
   },
   required: ['id', 'type', 'name'],
@@ -36,7 +36,7 @@ export const categoryParamsSchema = {
   $id: 'categoryParamsSchema',
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    id: { type: 'string' },
   },
   required: ['id'],
   additionalProperties: false,
@@ -95,7 +95,7 @@ export const categoryItemSchema = {
   type: 'object',
   properties: {
     id: { type: 'number' },
-    categoryId: { type: 'number' },
+    categoryId: { type: 'string' },
     name: { type: 'string' },
     desc: { type: 'string' },
   },

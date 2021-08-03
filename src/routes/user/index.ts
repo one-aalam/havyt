@@ -26,7 +26,6 @@ export default async function users(fastify: FastifyInstance) {
     Body: UserUpdateBody
   }>('/users/:id', { schema: updateUserSchema }, async (req) => {
     try {
-        console.log(req.body)
         return await userService.update(req.params, req.body)
       } catch (e) {
         return createError(e.code)

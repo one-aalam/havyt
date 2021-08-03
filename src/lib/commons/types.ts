@@ -6,7 +6,7 @@ export type EnvConfig = FromSchema<typeof envSchema>
 export type APIError = FromSchema<typeof errorSchema>
 
 export interface IHasIdentity {
-  id: number
+  id: string
   [key: string]: any
 }
 
