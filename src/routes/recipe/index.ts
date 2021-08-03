@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify'
+import { Container } from 'typedi'
 import createError from 'http-errors'
 import {
   getAllRecipesSchema,
@@ -17,21 +18,20 @@ import {
   RecipeUpdateMultipartBody,
 } from './types'
 import { RecipeService } from './service'
-import { Category } from '../category/types'
 import { toImageUrl, toFlatFromMultipartBody } from '../../lib/commons/utils'
 
 export default async function recipes(fastify: FastifyInstance) {
-  const recipeService = new RecipeService(
-      fastify.getStore<Recipe>('recipes'),
-      fastify.getStore<Category>('categories')
-    )
+  const recipeService = Container.get(RecipeService)
 
   fastify.get<{
     Querystring: RecipeQuerystring
-  }>('/recipes', {
-      schema: getAllRecipesSchema
-    }, async (req) => await recipeService.getAll(req.query)
-)
+  }>(
+    '/recipes',
+    {
+      schema: getAllRecipesSchema,
+    },
+    async (req) => await recipeService.getAll(req.query)
+  )
 
   // get the recipe by provided id
   fastify.get<{
@@ -49,15 +49,15 @@ export default async function recipes(fastify: FastifyInstance) {
     { schema: createRecipeMultipartSchema },
     async (req, reply) => {
       try {
-          let recipe;
-          if(req.isMultipart()) {
-            const body = toFlatFromMultipartBody(req.body) as RecipeCreateBody
-            body.imageUrl = await toImageUrl(req.body.imageUrl)
-            recipe = await recipeService.create(body)
-          } else {
-              // @ts-ignore
-            recipe = await recipeService.create(req.body)
-          }
+        let recipe
+        if (req.isMultipart()) {
+          const body = toFlatFromMultipartBody(req.body) as RecipeCreateBody
+          body.imageUrl = await toImageUrl(req.body.imageUrl)
+          recipe = await recipeService.create(body)
+        } else {
+          // @ts-ignore
+          recipe = await recipeService.create(req.body)
+        }
         reply.code(201).send(recipe)
       } catch (e) {
         return createError(e.code, e.message)
@@ -70,14 +70,14 @@ export default async function recipes(fastify: FastifyInstance) {
     Body: RecipeUpdateMultipartBody
   }>('/recipes/:id', { schema: updateRecipeMultipartSchema }, async (req) => {
     try {
-        if(req.isMultipart()) {
-            const body = toFlatFromMultipartBody(req.body) as RecipeUpdateBody
-            body.imageUrl = req.body.imageUrl ? await toImageUrl(req.body.imageUrl) : ''
-            return await recipeService.update(req.params, body)
-        } else {
-            // @ts-ignore
-            return await recipeService.update(req.params, req.body)
-        }
+      if (req.isMultipart()) {
+        const body = toFlatFromMultipartBody(req.body) as RecipeUpdateBody
+        body.imageUrl = req.body.imageUrl ? await toImageUrl(req.body.imageUrl) : ''
+        return await recipeService.update(req.params, body)
+      } else {
+        // @ts-ignore
+        return await recipeService.update(req.params, req.body)
+      }
     } catch (e) {
       return createError(e.code)
     }

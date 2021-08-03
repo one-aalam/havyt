@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import createError from 'http-errors'
+import { Container } from 'typedi'
 import {
   getAllCategoriesSchema,
   getCategorySchema,
@@ -7,20 +8,24 @@ import {
   updateCategorySchema,
   deleteCategorySchema,
   getAllCategoryItemsSchema,
-  getCategoryItemSchema
+  getCategoryItemSchema,
 } from './schemas'
-import { Category, CategoryParams, CategoryCreateBody, CategoryUpdateBody } from './types'
+import { CategoryParams, CategoryCreateBody, CategoryUpdateBody } from './types'
 import { CategoryService } from './service'
+
 /**
  *
  * @param fastify
  */
 
 export default async function categories(fastify: FastifyInstance) {
-  const categoryService = new CategoryService(fastify.getStore<Category>('categories'))
-
+  const categoryService = Container.get(CategoryService)
   // get all the categories
-  fastify.get('/categories', { schema: getAllCategoriesSchema }, async () => await categoryService.getAll())
+  fastify.get(
+    '/categories',
+    { schema: getAllCategoriesSchema },
+    async () => await categoryService.getAll()
+  )
 
   // get the category by provided id
   fastify.get<{

@@ -4,10 +4,12 @@ import { CATEGORIES } from '../routes/category/fixtures'
 
 const storeConfig: AppCollConfig = {
   categories: {
+    coll: 'categories',
     data: CATEGORIES,
     unique: 'type',
   },
   recipes: {
+    coll: 'recipes',
     data: RECIPES,
   },
 }

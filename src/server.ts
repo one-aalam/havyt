@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { buildServer } from './app'
 
 const server = buildServer()

@@ -1,23 +1,34 @@
 import StormDB from 'stormdb'
-import { IHasIdentity } from '../../lib/commons/types'
+import { Service, Token } from 'typedi'
+import { IHasIdentity } from '../commons/types'
 import { StoreItemNotFoundError, StoreItemConflictError } from './store-error'
-import { IRepository, StoreServiceOptions } from './types'
+import { IRepository, StoreServiceCollConfig } from './types'
 
+export const DbToken = new Token<StormDB>('STORE_DB_CONTEXT')
+
+@Service({ transient: true })
 export class StoreService<T extends IHasIdentity> implements IRepository<T> {
-  private _db: StormDB | undefined
+  private _db: StormDB
   private _coll: string
   private _data: T[]
   private _unique: keyof T | false
 
   private _currId = 0
 
-  constructor(options: StoreServiceOptions<T>) {
-    this._db = options.db && options.db
+  constructor(
+    db: StormDB,
+    options: StoreServiceCollConfig = {
+      coll: 'collection',
+      data: [],
+      unique: '',
+    }
+  ) {
+    this._db = db
     this._coll = options.coll ? String(options.coll) : 'collection'
     this._data =
-      this._db && this._db.get(this._coll).value().length
+      this._db && this._db.get(this._coll).value() && this._db.get(this._coll).value().length
         ? this._db.get(this._coll).value()
-        : options.data?.length
+        : options?.data?.length
         ? options.data
         : []
     this._unique = options.unique ? options.unique : false

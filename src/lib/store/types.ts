@@ -24,3 +24,9 @@ export type StoreServiceOptions<T> = {
   data?: T[]
   unique?: keyof T | false // single key for now
 }
+
+export type StoreServiceCollConfig = {
+  coll?: AppColl
+  data?: IHasIdentity[]
+  unique?: string // single key for now
+}

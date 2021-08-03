@@ -41,8 +41,8 @@ export const buildServer = (): FastifyInstance => {
 
   // Load and register API route files
   fastify.register(import('./routes/user'), { prefix: '/api' })
-  fastify.register(import('./routes/recipe'), { prefix: '/api' })
   fastify.register(import('./routes/category'), { prefix: '/api' })
+  fastify.register(import('./routes/recipe'), { prefix: '/api' })
   fastify.register(import('./routes/auth'), { prefix: '/api' })
 
   fastify.register(import('./routes/web-app'), {

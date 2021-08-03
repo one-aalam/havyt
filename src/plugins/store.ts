@@ -1,9 +1,10 @@
 import { FastifyInstance } from 'fastify'
 import StormDB from 'stormdb'
+import { Container } from 'typedi'
 import fp from 'fastify-plugin'
 import { join, dirname } from 'path'
-import { IHasIdentity, AppColl, AppCollConfig } from '../lib/commons/types'
-import { StoreService } from '../lib/store'
+import { AppCollConfig } from '../lib/commons/types'
+import { DbToken } from '../lib/store'
 
 const store = async (fastify: FastifyInstance, config: AppCollConfig) => {
   // @ts-ignore
@@ -27,27 +28,7 @@ const store = async (fastify: FastifyInstance, config: AppCollConfig) => {
     await db.save()
   }
 
-  fastify.decorate(
-    'getStore',
-    <T extends IHasIdentity>(
-      coll: AppColl,
-      options?: {
-        data?: T[]
-        unique?: string
-      }
-    ) => {
-      return new StoreService<T>({
-        coll,
-        db,
-        data: options?.data?.length ? options?.data : [],
-        unique: options?.unique
-          ? options?.unique
-          : config[coll]?.unique
-          ? config[coll]?.unique
-          : false,
-      })
-    }
-  )
+  Container.set(DbToken, db)
 }
 
 export default fp(store)

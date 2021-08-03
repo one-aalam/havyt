@@ -13,6 +13,7 @@ export interface IHasIdentity {
 export type AppColl = keyof typeof storeConfig
 
 export type AppCollEntryConfig = {
+  coll: AppColl
   data?: IHasIdentity[]
   unique?: string
 }
