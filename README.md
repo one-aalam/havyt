@@ -52,5 +52,8 @@ __partially documented__
                             |
 
 
+## When to expect the new changes?
+There's no timeline, but I try to contribute once every week in this repo with application of one single concept. You can watch the repo, or follow me on [Twitter](https://twitter.com/aftabbuddy) to be notified of the updates.
+
 ## Trivia
 This project builds upon my past experience of building Web-Apps/APIs/Boilerplates on top of Node.js like [Attic](https://github.com/one-aalam/attic) and [Embrace](https://github.com/one-aalam/Embrace)
