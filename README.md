@@ -48,4 +48,9 @@ __partially documented__
 |                                          | [Add serialisation with JSON Schema](https://github.com/one-aalam/havyt/commit/f5314176a5cbc3c1c4f1e72d01a4603344755625)                         |
 |                                          | [Re-factor: Add Per-resource schema files](https://github.com/one-aalam/havyt/commit/eac3bff7fddd20ce191c043f4d17ef7805e2596d)                   |
 |                                          | [Derive types from schemas](https://github.com/one-aalam/havyt/commit/590bf12a138fb4ff7598c69bddf4caa932543eaf)                                  |
-|                                          | [Add schemas to Get All calls](https://github.com/one-aalam/havyt/commit/6de3be04c2747e1982aea0c34e95f4292b3ad5ec)                               |
+|                                          | [Add schemas to Get All calls](https://github.com/one-aalam/havyt/commit/6de3be04c2747e1982aea0c34e95f4292b3ad5ec)
+                            |
+
+
+## Trivia
+This project builds upon my past experience of building Web-Apps/APIs/Boilerplates on top of Node.js like [Attic](https://github.com/one-aalam/attic) and [Embrace](https://github.com/one-aalam/Embrace)
