@@ -46,7 +46,7 @@ export default async function recipes(fastify: FastifyInstance) {
 
   fastify.post<{ Body: RecipeCreateMultipartBody }>(
     '/recipes',
-    { schema: createRecipeMultipartSchema },
+    { schema: createRecipeMultipartSchema, preHandler: [ fastify.verifyBasicAuth ] },
     async (req, reply) => {
       try {
         let recipe
@@ -68,7 +68,7 @@ export default async function recipes(fastify: FastifyInstance) {
   fastify.put<{
     Params: RecipeParams
     Body: RecipeUpdateMultipartBody
-  }>('/recipes/:id', { schema: updateRecipeMultipartSchema }, async (req) => {
+  }>('/recipes/:id', { schema: updateRecipeMultipartSchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req) => {
     try {
       if (req.isMultipart()) {
         const body = toFlatFromMultipartBody(req.body) as RecipeUpdateBody
@@ -85,7 +85,7 @@ export default async function recipes(fastify: FastifyInstance) {
 
   fastify.delete<{
     Params: RecipeParams
-  }>('/recipes/:id', { schema: deleteRecipeSchema }, async (req, reply) => {
+  }>('/recipes/:id', { schema: deleteRecipeSchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req, reply) => {
     try {
       return await recipeService.delete(req.params)
     } catch (e) {

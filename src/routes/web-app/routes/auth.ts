@@ -10,7 +10,7 @@ export default async function routes(fastify: FastifyInstance) {
       schema: {
         body: authSignInPayloadSchema,
       },
-      attachValidation: true,
+      attachValidation: true
     },
     async (req, reply) => {
       if (req.validationError) {

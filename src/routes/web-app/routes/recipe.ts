@@ -81,7 +81,7 @@ export default async function routes(fastify: FastifyInstance) {
 
   fastify.post<{ Body: RecipeCreateMultipartBody }>(
     '/recipes/add',
-    { schema: createRecipeMultipartSchema },
+    { schema: createRecipeMultipartSchema, preHandler: [ fastify.verifyBasicAuth ] },
     async (req, reply) => {
       const body = toArrayFromMultilineStrFields(toFlatFromMultipartBodySimple(req.body), [
         'ingredients',
@@ -97,7 +97,7 @@ export default async function routes(fastify: FastifyInstance) {
   fastify.post<{
     Params: RecipeParams
     Body: RecipeUpdateMultipartBody
-  }>('/recipes/:id/edit', { schema: updateRecipeMultipartSchema }, async (req, reply) => {
+  }>('/recipes/:id/edit', { schema: updateRecipeMultipartSchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req, reply) => {
     const body = toArrayFromMultilineStrFields(toFlatFromMultipartBodySimple(req.body), [
       'ingredients',
       'directions',

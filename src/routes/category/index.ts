@@ -62,7 +62,7 @@ export default async function categories(fastify: FastifyInstance) {
 
   fastify.post<{ Body: CategoryCreateBody }>(
     '/categories',
-    { schema: createCategorySchema },
+    { schema: createCategorySchema, preHandler: [ fastify.verifyBasicAuth ] },
     async (req, reply) => {
       try {
         const { type, name, desc } = req.body
@@ -81,7 +81,7 @@ export default async function categories(fastify: FastifyInstance) {
   fastify.put<{
     Params: CategoryParams
     Body: CategoryUpdateBody
-  }>('/categories/:id', { schema: updateCategorySchema }, async (req) => {
+  }>('/categories/:id', { schema: updateCategorySchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req) => {
     try {
       return await categoryService.update(req.params, req.body)
     } catch (e) {
@@ -91,7 +91,7 @@ export default async function categories(fastify: FastifyInstance) {
 
   fastify.delete<{
     Params: CategoryParams
-  }>('/categories/:id', { schema: deleteCategorySchema }, async (req) => {
+  }>('/categories/:id', { schema: deleteCategorySchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req) => {
     try {
       return await categoryService.delete(req.params)
     } catch (e) {
