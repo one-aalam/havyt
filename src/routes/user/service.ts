@@ -1,8 +1,10 @@
 import StormDB from 'stormdb'
 import { Inject, Service } from 'typedi'
+import { hash, compare } from 'bcrypt'
 import { User, UserParams, UserCreateBody, UserUpdateBody } from './types'
 import { StoreService, DbToken } from '../../lib/store'
 import storeConfig from '../../config/store'
+import userConfig from '../../config/user'
 
 
 
@@ -46,8 +48,14 @@ export class UserService {
   getOne = async (params: UserParams) => await this._store.getById(params.id)
 
   /* Only User */
-  create = async (body: UserCreateBody) => await this._store.create(body)
-  update = async (params: UserParams, body: UserUpdateBody) => await this._store.updateById(params.id, body)
+  create = async (body: UserCreateBody) => await this._store.create({
+      ...body,
+      password: await this._hashPassword(body.password)
+  })
+  update = async (params: UserParams, body: UserUpdateBody) => await this._store.updateById(params.id, {
+      ...body,
+      password: body?.password && body?.password.trim() !== '' ? await this._hashPassword(body.password) : body.password
+  })
 
   /* Soft-delete probably */
   delete = async (params: UserParams) => await this._store.deleteById(params.id)
@@ -59,17 +67,30 @@ export class UserService {
       : Promise.reject(new UserNotFoundError('username', username))
   }
 
-  getByUsernameAndPassword = async (username: string, password: string) => {
-    const user = await (await this.getAll()).find(user => user.username === username && user.password === password)
+  getByEmail = async (email: string) => {
+    const user = await (await this.getAll()).find(user => user.email === email)
     return user
       ? Promise.resolve(user)
-      : Promise.reject(new UserNotFoundError('username', username))
+      : Promise.reject(new UserNotFoundError('email', email))
+  }
+
+  getByUsernameAndPassword = async (username: string, password: string) => {
+    const user = await this.getByUsername(username)
+    const isValidUser = await this._comparePassword(password, user.password!)
+    return !isValidUser
+        ? Promise.reject(new UserNotFoundError('username', username))
+        : Promise.resolve(user)
   }
 
   getByEmailAndPassword = async (email: string, password: string) => {
-    const user = await (await this.getAll()).find(user => user.email === email && user.password === password)
-    return user
-    ? Promise.resolve(user)
-    : Promise.reject(new UserNotFoundError('email', email))
+    const user = await this.getByEmail(email)
+    const isValidUser = await this._comparePassword(password, user.password!)
+    return !isValidUser
+        ? Promise.reject(new UserNotFoundError('email', email))
+        : Promise.resolve(user)
   }
+
+  _hashPassword = async (password: string = userConfig.passDefault) => await hash(password, userConfig.passSaltRounds)
+  _comparePassword = async (attempt: string, password: string) => await compare(attempt, password)
+
 }

@@ -1,6 +1,7 @@
 const userConfig = {
     passRegex: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$',
     passDefault: 'Pa33w0rd!',
+    passSaltRounds: 10
     /*
     This regex will enforce these rules:
         At least one upper case English letter, (?=.*?[A-Z])

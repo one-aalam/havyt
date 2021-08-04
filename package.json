@@ -19,6 +19,7 @@
   "author": "Aftab Alam",
   "license": "MIT",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/busboy": "^0.2.4",
     "@types/fastify-cors": "^2.1.0",
     "@types/http-errors": "^1.8.1",
@@ -45,6 +46,7 @@
   },
   "dependencies": {
     "@gquittet/graceful-server": "^2.5.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "fastify": "^3.19.0",
     "fastify-compress": "^3.6.0",
