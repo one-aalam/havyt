@@ -19,6 +19,7 @@ declare module 'fastify' {
 
     getBasicAuthPayload(req: FastifyRequest): Array<string>
     verifyBasicAuth(req: FastifyRequest): void
+    verifyBearerAuth(req: FastifyRequest): void
   }
   export interface FastifyRequest {
     user: User

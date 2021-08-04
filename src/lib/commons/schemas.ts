@@ -4,8 +4,11 @@ export const envSchema = {
     APP_PORT: { type: 'string', default: 3000 },
     APP_PASS_ALL: { type: 'string', default: 'allowme' },
     APP_FILE_DB: { type: 'string' },
+    JWT_SECRET: { type: 'string' },
+    JWT_EXP: { type: 'number' },
+    JWT_AUD: { type: 'string' },
   },
-  required: ['APP_PORT', 'APP_FILE_DB'],
+  required: ['APP_PORT', 'APP_FILE_DB', 'JWT_SECRET', 'JWT_EXP'],
   additionalProperties: false,
 } as const
 

@@ -48,6 +48,7 @@
     "@gquittet/graceful-server": "^2.5.1",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
+    "fast-jwt": "^1.2.0",
     "fastify": "^3.19.0",
     "fastify-compress": "^3.6.0",
     "fastify-env": "^2.1.1",
