@@ -8,12 +8,12 @@ import { UserService } from './service'
 export default async function users(fastify: FastifyInstance) {
     const userService = Container.get(UserService)
   // get all the users
-  fastify.get('/users', { schema: getAllUsersSchema, preHandler: [ fastify.verifyBasicAuth ] }, async () => await userService.getAll())
+  fastify.get('/users', { schema: getAllUsersSchema, preHandler: [ fastify.verifyBearerAuth ] }, async () => await userService.getAll())
 
   // get the user by provided id
   fastify.get<{
     Params: UserParams
-  }>('/users/:id', { schema: getUserSchema, preHandler: [ fastify.verifyBasicAuth ] }, async (req) => {
+  }>('/users/:id', { schema: getUserSchema, preHandler: [ fastify.verifyBearerAuth ] }, async (req) => {
     try {
         return await userService.getOne(req.params)
       } catch (e) {

@@ -6,6 +6,7 @@ import { authSignInSchema, authSignUpSchema } from './schemas'
 import { AuthService } from './service'
 
 
+
 export default async function auth(fastify: FastifyInstance) {
 
     const authService = Container.get(AuthService)
